@@ -10,6 +10,7 @@ export async function proxy(request: NextRequest) {
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/verify-email") ||
     pathname.startsWith("/api/auth")
   ) {
     return NextResponse.next();
