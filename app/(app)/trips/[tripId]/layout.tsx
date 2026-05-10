@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { ArrowLeft, Route, DollarSign, CheckSquare, BookOpen, Pencil } from "lucide-react";
+import Image from "next/image";
 
 const tabs = [
   { href: "", label: "Itinerary", icon: Route },
@@ -14,9 +15,11 @@ const tabs = [
 
 export default async function TripLayout({
   children,
+  modal,
   params,
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
   params: Promise<{ tripId: string }>;
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -35,43 +38,44 @@ export default async function TripLayout({
 
   return (
     <div className="space-y-0">
-      {/* Back link */}
       <Link
         href="/trips"
-        className="mb-4 inline-flex items-center gap-1.5 text-sm text-[#5A6B7A] transition-colors hover:text-[#FF5733]"
+        className="mb-4 inline-flex items-center gap-1.5 text-sm text-[rgba(240,237,230,0.45)] transition-colors hover:text-[#E8C547]"
       >
         <ArrowLeft size={15} />
         My Trips
       </Link>
 
-      {/* Trip Header */}
-      <div className="relative mb-6 overflow-hidden rounded-2xl bg-[#0D1B2A]">
+      <div className="relative mb-6 overflow-hidden rounded-2xl">
         {trip.coverPhotoUrl && (
-          <img
+          <Image
             src={trip.coverPhotoUrl}
             alt={trip.name}
-            className="absolute inset-0 h-full w-full object-cover opacity-30"
+            fill
+            className="object-cover opacity-30"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            style={{ viewTransitionName: `trip-cover-${tripId}` }}
           />
         )}
+        <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,12,16,0.95)] via-[rgba(8,12,16,0.6)] to-[rgba(8,12,16,0.3)]" />
         <div className="relative px-6 py-6">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="font-(family-name:--font-heading) text-2xl font-bold text-[#F5ECD7] sm:text-3xl">
+              <h1 className="font-heading text-[clamp(1.5rem,4vw,2.5rem)] font-light text-[#F0EDE6]">
                 {trip.name}
               </h1>
-              <p className="mt-1 text-sm text-[#A0AEBF]">{dateStr}</p>
+              <p className="mt-1 text-sm text-[rgba(240,237,230,0.5)]">{dateStr}</p>
             </div>
             <Link
               href={`/trips/${tripId}/edit`}
-              className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs text-[#F5ECD7] backdrop-blur-sm transition-colors hover:bg-white/20"
+              className="flex items-center gap-1.5 rounded-lg bg-[rgba(255,255,255,0.08)] px-3 py-1.5 text-xs text-[#F0EDE6] backdrop-blur-sm transition-colors hover:bg-[rgba(255,255,255,0.12)]"
             >
               <Pencil size={13} />
               Edit
             </Link>
           </div>
 
-          {/* Tabs */}
-          <nav className="mt-5 flex gap-1 overflow-x-auto">
+          <nav className="mt-5 flex gap-1 overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => {
               const href = `/trips/${tripId}${tab.href}`;
               const Icon = tab.icon;
@@ -79,7 +83,7 @@ export default async function TripLayout({
                 <Link
                   key={tab.href}
                   href={href}
-                  className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[#A0AEBF] transition-colors hover:bg-white/10 hover:text-[#F5ECD7]"
+                  className="flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[rgba(240,237,230,0.45)] transition-colors hover:bg-[rgba(255,255,255,0.08)] hover:text-[#F0EDE6]"
                 >
                   <Icon size={13} />
                   {tab.label}
@@ -91,6 +95,7 @@ export default async function TripLayout({
       </div>
 
       {children}
+      {modal}
     </div>
   );
 }

@@ -84,29 +84,27 @@ export default function NewTripPage() {
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
-      {/* Header */}
       <div>
         <Link
           href="/trips"
-          className="mb-4 inline-flex items-center gap-1.5 text-sm text-[#5A6B7A] transition-colors hover:text-[#FF5733]"
+          className="mb-4 inline-flex items-center gap-1.5 text-sm text-[rgba(240,237,230,0.45)] transition-colors hover:text-[#E8C547]"
         >
           <ArrowLeft size={15} />
           My Trips
         </Link>
-        <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-[#0D1B2A]">
+        <h1 className="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-light text-[#F0EDE6]">
           New Trip
         </h1>
-        <p className="mt-1 text-sm text-[#5A6B7A]">Plan your next expedition</p>
+        <p className="mt-1 text-sm text-[rgba(240,237,230,0.45)]">Plan your next expedition</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Cover photo */}
         <div>
-          <Label className="mb-2 block text-[#0D1B2A]">Cover Photo (optional)</Label>
+          <Label className="mb-2 block text-[rgba(240,237,230,0.7)]">Cover Photo (optional)</Label>
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="relative flex h-36 w-full items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-[#D4C9B0] bg-[#F5ECD7] transition-colors hover:border-[#FF5733]"
+            className="relative flex h-36 w-full items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] transition-colors hover:border-[#E8C547]"
           >
             {coverPreview ? (
               <>
@@ -121,7 +119,7 @@ export default function NewTripPage() {
                 )}
               </>
             ) : (
-              <div className="flex flex-col items-center gap-2 text-[#A0AEBF]">
+              <div className="flex flex-col items-center gap-2 text-[rgba(240,237,230,0.35)]">
                 <Upload size={24} />
                 <span className="text-sm">Upload cover photo</span>
                 <span className="text-xs">JPEG, PNG or WEBP · max 5 MB</span>
@@ -132,7 +130,7 @@ export default function NewTripPage() {
             <button
               type="button"
               onClick={() => { setCoverPreview(""); setCoverUrl(""); }}
-              className="mt-2 flex items-center gap-1 text-xs text-[#5A6B7A] hover:text-[#E11D48]"
+              className="mt-2 flex items-center gap-1 text-xs text-[rgba(240,237,230,0.45)] hover:text-[#E05252]"
             >
               <X size={12} /> Remove photo
             </button>
@@ -140,10 +138,9 @@ export default function NewTripPage() {
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
         </div>
 
-        {/* Trip Name */}
         <div className="space-y-1.5">
-          <Label htmlFor="name" className="flex items-center gap-1.5 text-[#0D1B2A]">
-            <Compass size={14} className="text-[#FF5733]" />
+          <Label htmlFor="name" className="flex items-center gap-1.5 text-[rgba(240,237,230,0.7)]">
+            <Compass size={14} className="text-[#E8C547]" />
             Trip Name *
           </Label>
           <Input
@@ -151,14 +148,13 @@ export default function NewTripPage() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Japan & South Korea 2026"
-            className="border-[#D4C9B0] bg-white/60 focus-visible:border-[#FF5733] focus-visible:ring-[#FF5733]/20"
+            className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus-visible:border-[#E8C547] focus-visible:ring-[#E8C547]/20"
           />
         </div>
 
-        {/* Description */}
         <div className="space-y-1.5">
-          <Label htmlFor="description" className="flex items-center gap-1.5 text-[#0D1B2A]">
-            <FileText size={14} className="text-[#FF5733]" />
+          <Label htmlFor="description" className="flex items-center gap-1.5 text-[rgba(240,237,230,0.7)]">
+            <FileText size={14} className="text-[#E8C547]" />
             Description (optional)
           </Label>
           <Textarea
@@ -167,15 +163,14 @@ export default function NewTripPage() {
             onChange={(e) => setDescription(e.target.value)}
             placeholder="What's this trip about?"
             rows={3}
-            className="resize-none border-[#D4C9B0] bg-white/60 focus-visible:border-[#FF5733] focus-visible:ring-[#FF5733]/20"
+            className="resize-none border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus-visible:border-[#E8C547] focus-visible:ring-[#E8C547]/20"
           />
         </div>
 
-        {/* Dates */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <Label htmlFor="startDate" className="flex items-center gap-1.5 text-[#0D1B2A]">
-              <Calendar size={14} className="text-[#FF5733]" />
+            <Label htmlFor="startDate" className="flex items-center gap-1.5 text-[rgba(240,237,230,0.7)]">
+              <Calendar size={14} className="text-[#E8C547]" />
               Start Date *
             </Label>
             <Input
@@ -183,12 +178,12 @@ export default function NewTripPage() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="border-[#D4C9B0] bg-white/60 focus-visible:border-[#FF5733] focus-visible:ring-[#FF5733]/20"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] focus-visible:border-[#E8C547] focus-visible:ring-[#E8C547]/20"
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="endDate" className="flex items-center gap-1.5 text-[#0D1B2A]">
-              <Calendar size={14} className="text-[#FF5733]" />
+            <Label htmlFor="endDate" className="flex items-center gap-1.5 text-[rgba(240,237,230,0.7)]">
+              <Calendar size={14} className="text-[#E8C547]" />
               End Date *
             </Label>
             <Input
@@ -197,19 +192,18 @@ export default function NewTripPage() {
               value={endDate}
               min={startDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="border-[#D4C9B0] bg-white/60 focus-visible:border-[#FF5733] focus-visible:ring-[#FF5733]/20"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] focus-visible:border-[#E8C547] focus-visible:ring-[#E8C547]/20"
             />
           </div>
         </div>
 
-        {/* Budget */}
         <div className="space-y-1.5">
-          <Label htmlFor="budget" className="flex items-center gap-1.5 text-[#0D1B2A]">
-            <DollarSign size={14} className="text-[#FF5733]" />
+          <Label htmlFor="budget" className="flex items-center gap-1.5 text-[rgba(240,237,230,0.7)]">
+            <DollarSign size={14} className="text-[#E8C547]" />
             Total Budget (optional)
           </Label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#A0AEBF]">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[rgba(240,237,230,0.35)]">$</span>
             <Input
               id="budget"
               type="number"
@@ -218,27 +212,29 @@ export default function NewTripPage() {
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               placeholder="0.00"
-              className="border-[#D4C9B0] bg-white/60 pl-7 focus-visible:border-[#FF5733] focus-visible:ring-[#FF5733]/20"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-8 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus-visible:border-[#E8C547] focus-visible:ring-[#E8C547]/20"
             />
           </div>
         </div>
 
         {error && (
-          <p className="rounded-lg bg-[#E11D48]/10 px-4 py-2.5 text-sm text-[#E11D48]">
-            {error}
-          </p>
+          <p className="text-sm text-[#E05252]">{error}</p>
         )}
 
         <div className="flex gap-3">
           <Button
             type="submit"
-            disabled={loading || uploading}
-            className="flex-1 rounded-full bg-[#FF5733] text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-60"
+            disabled={loading}
+            className="h-11 rounded-full bg-[#E8C547] px-6 text-sm font-semibold text-[#080C10] hover:bg-[#d4b33f] disabled:opacity-60"
           >
             {loading ? "Creating…" : "Create Trip"}
           </Button>
           <Link href="/trips">
-            <Button type="button" variant="outline" className="rounded-full border-[#D4C9B0]">
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 rounded-full border-[rgba(255,255,255,0.08)] bg-transparent text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
+            >
               Cancel
             </Button>
           </Link>

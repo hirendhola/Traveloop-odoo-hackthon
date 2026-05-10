@@ -1,19 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/prisma";
-import { MapPin, Clock, Calendar, DollarSign, Compass } from "lucide-react";
+import { MapPin, Clock, Calendar, DollarSign, Compass, Plane, Landmark, Utensils, Mountain, Palette, ShoppingBag, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
-const ACTIVITY_ICONS: Record<string, string> = {
-  sightseeing: "🏛", food: "🍜", adventure: "🏔", culture: "🎭", shopping: "🛍", other: "✨",
-};
-
-const ACTIVITY_COLORS: Record<string, string> = {
-  sightseeing: "bg-blue-50 text-blue-700 border-blue-100",
-  food: "bg-orange-50 text-orange-700 border-orange-100",
-  adventure: "bg-green-50 text-green-700 border-green-100",
-  culture: "bg-purple-50 text-purple-700 border-purple-100",
-  shopping: "bg-pink-50 text-pink-700 border-pink-100",
-  other: "bg-gray-50 text-gray-600 border-gray-100",
+const ACTIVITY_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  sightseeing: Landmark,
+  food: Utensils,
+  adventure: Mountain,
+  culture: Palette,
+  shopping: ShoppingBag,
+  other: Sparkles,
 };
 
 function daysBetween(a: Date, b: Date) {
@@ -26,6 +24,31 @@ function fmt(date: Date) {
 
 function fmtShort(date: Date) {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
+  const { token } = await params;
+  const trip = await db.trip.findUnique({ where: { shareToken: token }, select: { name: true } });
+  return {
+    title: trip?.name ?? "Shared Trip",
+    description: "Check out this trip on Traveloop",
+  };
+}
+
+export async function generateStaticParams() {
+  try {
+    const trips = await db.trip.findMany({
+      where: { isPublic: true, shareToken: { not: null } },
+      select: { shareToken: true },
+    });
+    return trips.map((t) => ({ token: t.shareToken! }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function SharedTripPage({
@@ -53,7 +76,6 @@ export default async function SharedTripPage({
   if (!trip || !trip.isPublic) notFound();
 
   const totalDays = daysBetween(trip.startDate, trip.endDate);
-  const totalSpent = trip.expenses.reduce((sum, e) => sum + Number(e.amount), 0);
   const budget = trip.totalBudget ? Number(trip.totalBudget) : null;
   const totalEstimated = trip.stops.reduce(
     (sum, stop) =>
@@ -62,17 +84,16 @@ export default async function SharedTripPage({
   );
 
   return (
-    <div className="min-h-screen bg-[#F5ECD7]">
+    <div className="min-h-screen bg-[#080C10]">
       {/* Branding header */}
-      <header className="border-b border-[#D4C9B0] bg-[#0D1B2A] px-6 py-3">
+      <header className="border-b border-[rgba(255,255,255,0.06)] bg-[#0D1218] px-6 py-3">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Compass size={20} className="text-[#FF5733]" />
-            <span className="font-(family-name:--font-heading) text-lg text-[#F5ECD7]">Traveloop</span>
+            <span className="font-heading text-xl text-[#F0EDE6]">Traveloop</span>
           </Link>
           <Link
             href="/signup"
-            className="rounded-full bg-[#FF5733] px-4 py-1.5 text-sm font-medium text-[#0D1B2A] transition-colors hover:bg-[#FF8A6C]"
+            className="rounded-full bg-[#E8C547] px-4 py-1.5 text-sm font-medium text-[#080C10] transition-colors hover:bg-[#d4b33f]"
           >
             Plan your own trip →
           </Link>
@@ -81,26 +102,28 @@ export default async function SharedTripPage({
 
       <main className="mx-auto max-w-3xl px-4 py-8 space-y-6">
         {/* Trip hero */}
-        <div className="relative overflow-hidden rounded-2xl bg-[#0D1B2A]">
+        <div className="relative overflow-hidden rounded-2xl">
           {trip.coverPhotoUrl && (
-            <img
+            <Image
               src={trip.coverPhotoUrl}
               alt={trip.name}
-              className="absolute inset-0 h-full w-full object-cover opacity-30"
+              fill
+              className="object-cover opacity-30"
+              sizes="768px"
             />
           )}
+          <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,12,16,0.95)] via-[rgba(8,12,16,0.6)] to-[rgba(8,12,16,0.3)]" />
           <div className="relative px-6 py-8">
-            <p className="mb-1 text-xs font-medium uppercase tracking-widest text-[#FF5733]">
+            <p className="mb-1 text-[10px] font-medium uppercase tracking-[0.2em] text-[#E8C547]">
               Shared Itinerary
             </p>
-            <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-[#F5ECD7] sm:text-4xl">
+            <h1 className="font-heading text-[clamp(2rem,5vw,3rem)] font-light text-[#F0EDE6]">
               {trip.name}
             </h1>
-            <p className="mt-2 text-sm text-[#A0AEBF]">
+            <p className="mt-2 text-sm text-[rgba(240,237,230,0.5)]">
               {fmt(trip.startDate)} – {fmt(trip.endDate)}
             </p>
 
-            {/* Stats row */}
             <div className="mt-5 flex flex-wrap gap-3">
               {[
                 { icon: MapPin, label: `${trip._count.stops} cities` },
@@ -112,9 +135,9 @@ export default async function SharedTripPage({
                 return (
                   <div
                     key={i}
-                    className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm text-[#F5ECD7] backdrop-blur-sm"
+                    className="flex items-center gap-1.5 rounded-lg bg-[rgba(255,255,255,0.06)] px-3 py-1.5 text-sm text-[#F0EDE6] backdrop-blur-sm"
                   >
-                    <Icon size={13} />
+                    <Icon size={13} className="text-[#E8C547]" />
                     {stat.label}
                   </div>
                 );
@@ -125,108 +148,117 @@ export default async function SharedTripPage({
 
         {/* Timeline */}
         {trip.stops.length === 0 ? (
-          <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-[#D4C9B0] py-14 text-center">
-            <MapPin size={32} className="mb-2 text-[#D4C9B0]" />
-            <p className="text-sm text-[#A0AEBF]">No stops in this itinerary</p>
+          <div className="flex flex-col items-center rounded-2xl border border-[rgba(255,255,255,0.08)] py-14 text-center">
+            <MapPin size={32} className="mb-2 text-[rgba(240,237,230,0.2)]" />
+            <p className="text-sm text-[rgba(240,237,230,0.45)]">No stops in this itinerary</p>
           </div>
         ) : (
           <div className="relative">
-            <div className="absolute left-2.75 top-6 bottom-6 w-0.5 bg-[#D4C9B0]" />
+            <div className="absolute left-2.25 top-2 bottom-10 w-0.5 bg-[#E8C547]/30" />
             <div className="space-y-2">
-              {trip.stops.map((stop) => {
+              {trip.stops.map((stop, idx) => {
                 const nights = daysBetween(stop.startDate, stop.endDate);
+                const isLast = idx === trip.stops.length - 1;
+
                 return (
-                  <div key={stop.id} className="relative flex gap-4">
-                    <div className="relative z-10 mt-5 flex h-6 w-6 shrink-0 items-center justify-center">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-[#FF5733] bg-[#F5ECD7]">
-                        <div className="h-2.5 w-2.5 rounded-full bg-[#FF5733]" />
+                  <div key={stop.id}>
+                    <div className="relative flex gap-5">
+                      <div className="relative z-10 mt-1 flex h-5 w-5 shrink-0 items-center justify-center">
+                        <div className="h-5 w-5 rounded-full border-2 border-[#E8C547] bg-[#080C10] gold-glow" />
                       </div>
-                    </div>
+                      <div className="mb-6 flex-1">
+                        <h3 className="font-heading text-[1.65rem] font-light text-[#F0EDE6]">
+                          {stop.city.name}
+                        </h3>
+                        <p className="mb-3 text-xs text-[rgba(240,237,230,0.45)]">
+                          {stop.city.country} · {fmtShort(stop.startDate)} – {fmtShort(stop.endDate)} · {nights} {nights === 1 ? "night" : "nights"}
+                        </p>
 
-                    <div className="mb-8 flex-1 overflow-hidden rounded-2xl border border-[#D4C9B0] bg-white/80">
-                      <div className="flex items-start justify-between bg-[#0D1B2A] px-5 py-4">
-                        <div>
-                          <h3 className="font-(family-name:--font-heading) text-lg font-bold text-[#F5ECD7]">
-                            {stop.city.name}
-                          </h3>
-                          <p className="mt-0.5 text-xs text-[#A0AEBF]">
-                            {stop.city.country} · {stop.city.region}
-                          </p>
+                        <div className="relative mb-4 h-40 overflow-hidden rounded-xl ring-1 ring-[rgba(255,255,255,0.08)]">
+                          {stop.city.coverImageUrl ? (
+                            <Image
+                              src={stop.city.coverImageUrl}
+                              alt={stop.city.name}
+                              fill
+                              className="object-cover"
+                              sizes="768px"
+                            />
+                          ) : (
+                            <div className="flex h-full items-center justify-center bg-[#0F1419]">
+                              <span className="font-heading text-4xl text-[#E8C547]">
+                                {stop.city.name.charAt(0)}
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <div className="text-right">
-                          <p className="text-sm text-[#F5ECD7]">
-                            {fmtShort(stop.startDate)} – {fmtShort(stop.endDate)}
-                          </p>
-                          <p className="mt-0.5 text-xs text-[#A0AEBF]">
-                            {nights} {nights === 1 ? "night" : "nights"}
-                          </p>
-                        </div>
-                      </div>
 
-                      {stop.activities.length === 0 ? (
-                        <p className="px-5 py-4 text-sm text-[#A0AEBF]">No activities planned</p>
-                      ) : (
-                        <div className="divide-y divide-[#F0E8D9]">
-                          {stop.activities.map((sa) => {
-                            const colorCls = ACTIVITY_COLORS[sa.activity.type] ?? ACTIVITY_COLORS.other;
-                            const emoji = ACTIVITY_ICONS[sa.activity.type] ?? "✨";
-                            return (
-                              <div key={sa.id} className="flex items-center gap-3 px-5 py-3">
-                                <span className="text-lg">{emoji}</span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-[#0D1B2A] truncate">
-                                    {sa.activity.name}
-                                  </p>
-                                </div>
-                                <div className="flex shrink-0 items-center gap-2">
-                                  <span className={`rounded-full border px-2 py-0.5 text-xs font-medium capitalize ${colorCls}`}>
-                                    {sa.activity.type}
-                                  </span>
-                                  <span className="flex items-center gap-1 text-xs text-[#A0AEBF]">
+                        {stop.activities.length === 0 ? (
+                          <p className="text-sm text-[rgba(240,237,230,0.35)]">No activities planned</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {stop.activities.map((sa) => {
+                              const IconComp = ACTIVITY_ICONS[sa.activity.type] ?? Sparkles;
+                              return (
+                                <div
+                                  key={sa.id}
+                                  className="flex items-center gap-3 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] px-4 py-3"
+                                >
+                                  <IconComp size={16} className="text-[#E8C547]" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-[#F0EDE6] truncate">
+                                      {sa.activity.name}
+                                    </p>
+                                  </div>
+                                  <span className="flex shrink-0 items-center gap-1 text-xs text-[rgba(240,237,230,0.4)]">
                                     <Clock size={11} />
                                     {sa.activity.durationMinutes}m
                                   </span>
-                                  <span className="text-xs font-medium text-[#7D9B76]">
-                                    ${Number(sa.activity.estimatedCost).toLocaleString()}
+                                  <span className="shrink-0 rounded-full bg-[rgba(232,197,71,0.12)] px-2 py-0.5 text-[10px] font-medium text-[#E8C547]">
+                                    ${Number(sa.activity.estimatedCost)}
                                   </span>
                                 </div>
-                              </div>
-                            );
-                          })}
-                          <div className="flex items-center justify-between bg-[#F8F4EC] px-5 py-2">
-                            <span className="text-xs text-[#A0AEBF]">
-                              {stop.activities.length} {stop.activities.length === 1 ? "activity" : "activities"}
-                            </span>
-                            <span className="text-xs font-semibold text-[#0D1B2A]">
-                              Est. ${stop.activities.reduce((s, sa) => s + Number(sa.activity.estimatedCost), 0).toLocaleString()}
-                            </span>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {!isLast && (
+                      <div className="relative flex gap-5 py-4">
+                        <div className="relative z-10 flex h-5 w-5 shrink-0 items-center justify-center">
+                          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#080C10]">
+                            <Plane size={12} className="text-[#E8C547]" />
                           </div>
                         </div>
-                      )}
-                    </div>
+                        <div className="flex items-center gap-2 text-xs text-[rgba(240,237,230,0.35)]">
+                          <span className="h-px w-8 bg-[#E8C547]/30" />
+                          In transit
+                          <span className="h-px flex-1 bg-[#E8C547]/30" />
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
             </div>
           </div>
         )}
+      </main>
 
-        {/* CTA */}
-        <div className="rounded-2xl border border-[#D4C9B0] bg-white/80 px-6 py-6 text-center">
-          <p className="font-(family-name:--font-heading) text-xl font-bold text-[#0D1B2A]">
-            Inspired by this trip?
+      {/* Sticky bottom bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-[rgba(255,255,255,0.06)] bg-[rgba(13,18,24,0.95)] px-6 py-3 backdrop-blur-lg">
+        <div className="mx-auto flex max-w-3xl items-center justify-between">
+          <p className="text-sm text-[rgba(240,237,230,0.6)]">
+            Inspired? Copy this trip to your account
           </p>
-          <p className="mt-1 text-sm text-[#5A6B7A]">
-            Create your own free account and start planning your next adventure.
-          </p>
-          <Link
-            href="/signup"
-            className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-[#FF5733] px-6 py-2.5 text-sm font-medium text-[#0D1B2A] transition-colors hover:bg-[#FF8A6C]"
-          >
-            Start planning for free →
+          <Link href="/signup">
+            <Button className="h-9 rounded-full bg-[#E8C547] px-5 text-sm font-semibold text-[#080C10] hover:bg-[#d4b33f]">
+              Start Planning
+            </Button>
           </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

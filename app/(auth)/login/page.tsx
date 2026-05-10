@@ -7,7 +7,7 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -125,39 +125,36 @@ function LoginContent() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center">
-        <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-foreground">
+        <h1 className="font-heading text-3xl font-light text-[#F0EDE6]">
           Welcome Back
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">Sign in to your Traveloop account</p>
+        <p className="mt-2 text-sm text-[rgba(240,237,230,0.45)]">Sign in to your Traveloop account</p>
       </div>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="sr-only">Sign In</CardTitle>
-          <CardDescription className="sr-only">Enter your credentials to access your account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {justVerified && (
-            <div className="mb-4 rounded-lg border border-secondary/30 bg-secondary/10 p-3">
-              <p className="text-sm text-secondary">
-                Email verified successfully! You can now sign in.
-              </p>
-            </div>
-          )}
-          {verifyError && (
-            <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/10 p-3">
-              <p className="text-sm text-destructive">
-                {verifyError === "invalid_token"
-                  ? "Verification link is invalid or expired. Request a new one below."
-                  : `Verification failed: ${verifyError}`}
-              </p>
-            </div>
-          )}
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-6 backdrop-blur-sm">
+        {justVerified && (
+          <div className="mb-4 rounded-lg border border-[#E8C547]/30 bg-[#E8C547]/10 p-3">
+            <p className="text-sm text-[#E8C547]">
+              Email verified successfully! You can now sign in.
+            </p>
+          </div>
+        )}
+        {verifyError && (
+          <div className="mb-4 rounded-lg border border-[#E05252]/30 bg-[#E05252]/10 p-3">
+            <p className="text-sm text-[#E05252]">
+              {verifyError === "invalid_token"
+                ? "Verification link is invalid or expired. Request a new one below."
+                : `Verification failed: ${verifyError}`}
+            </p>
+          </div>
+        )}
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-[rgba(240,237,230,0.7)]">Email</Label>
+            <div className="relative">
+              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="email"
                 type="email"
@@ -165,11 +162,15 @@ function LoginContent() {
                 required
                 value={email}
                 onChange={(e) => { setEmail(e.target.value); setUnverifiedEmail(false); }}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-[rgba(240,237,230,0.7)]">Password</Label>
+            <div className="relative">
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="password"
                 type="password"
@@ -178,61 +179,67 @@ function LoginContent() {
                 minLength={8}
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setUnverifiedEmail(false); }}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
-            {resetSent && (
-              <p className="text-sm text-secondary">Check your email for the link we sent.</p>
-            )}
+          {error && <p className="text-sm text-[#E05252]">{error}</p>}
+          {resetSent && (
+            <p className="text-sm text-[#7D9B76]">Check your email for the link we sent.</p>
+          )}
 
-            {unverifiedEmail && (
-              <div className="space-y-2 rounded-lg bg-muted p-3">
-                <p className="text-sm text-muted-foreground">
-                  Your email is not verified. Please check your inbox or resend the verification link.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  disabled={loading}
-                  onClick={handleResendVerification}
-                  className="w-full"
-                >
-                  {loading ? "Sending..." : "Resend Verification Email"}
-                </Button>
-              </div>
-            )}
-
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Signing in..." : "Sign In"}
-            </Button>
-
-            <div className="flex items-center justify-between text-sm">
-              <button
+          {unverifiedEmail && (
+            <div className="space-y-2 rounded-lg border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-3">
+              <p className="text-sm text-[rgba(240,237,230,0.6)]">
+                Your email is not verified. Please check your inbox or resend the verification link.
+              </p>
+              <Button
                 type="button"
-                onClick={handleForgotPassword}
-                className="text-muted-foreground underline-offset-2 hover:text-primary hover:underline"
+                variant="outline"
+                size="sm"
+                disabled={loading}
+                onClick={handleResendVerification}
+                className="w-full border-[rgba(255,255,255,0.08)] text-[#F0EDE6] hover:bg-[rgba(255,255,255,0.06)]"
               >
-                Forgot Password?
-              </button>
-              <Link
-                href="/signup"
-                className="text-primary underline-offset-2 hover:text-primary/80 hover:underline"
-              >
-                Sign Up
-              </Link>
+                {loading ? "Sending..." : "Resend Verification Email"}
+              </Button>
             </div>
+          )}
 
-            <p className="text-center text-xs text-muted-foreground">
-              Need to verify your email?{" "}
-              <Link href="/verify-email" className="text-primary underline-offset-2 hover:text-primary/80 hover:underline">
-                Send verification link
-              </Link>
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="h-11 w-full rounded-full bg-[#E8C547] text-sm font-semibold text-[#080C10] transition-all hover:bg-[#d4b33f] hover:shadow-lg hover:shadow-[#E8C547]/20"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+            <ArrowRight size={16} className="ml-2" />
+          </Button>
+
+          <div className="flex items-center justify-between text-sm">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              className="text-[rgba(240,237,230,0.45)] underline-offset-2 hover:text-[#E8C547] hover:underline"
+            >
+              Forgot Password?
+            </button>
+            <Link
+              href="/signup"
+              className="text-[#E8C547] underline-offset-2 hover:text-[#d4b33f] hover:underline"
+            >
+              Sign Up
+            </Link>
+          </div>
+
+          <p className="text-center text-xs text-[rgba(240,237,230,0.3)]">
+            Need to verify your email?{" "}
+            <Link href="/verify-email" className="text-[#E8C547] underline-offset-2 hover:text-[#d4b33f] hover:underline">
+              Send verification link
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

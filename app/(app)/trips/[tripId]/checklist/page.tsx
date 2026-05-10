@@ -4,6 +4,10 @@ import { db } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { ChecklistClient } from "@/components/checklist-client";
 
+export const metadata = {
+  title: "Checklist",
+};
+
 export default async function ChecklistPage({
   params,
 }: {

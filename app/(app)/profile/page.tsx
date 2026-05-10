@@ -4,6 +4,10 @@ import { db } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { ProfileClient } from "@/components/profile-client";
 
+export const metadata = {
+  title: "Profile",
+};
+
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user) redirect("/login");
@@ -31,10 +35,10 @@ export default async function ProfilePage() {
   return (
     <div className="space-y-2">
       <div className="mb-6">
-        <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-[#0D1B2A]">
+        <h1 className="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-light text-[#F0EDE6]">
           Profile
         </h1>
-        <p className="mt-1 text-sm text-[#5A6B7A]">Manage your account and preferences</p>
+        <p className="mt-1 text-sm text-[rgba(240,237,230,0.45)]">Manage your account and preferences</p>
       </div>
 
       <ProfileClient

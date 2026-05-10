@@ -94,41 +94,39 @@ export function NotesClient({
 
   return (
     <div className="space-y-4">
-      {/* Add note CTA */}
       <div className="flex justify-between items-center">
-        <p className="text-sm text-[#5A6B7A]">{notes.length} {notes.length === 1 ? "note" : "notes"}</p>
+        <p className="text-sm text-[rgba(240,237,230,0.45)]">{notes.length} {notes.length === 1 ? "note" : "notes"}</p>
         <Button
           onClick={() => setShowForm(!showForm)}
-          className="h-8 rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C]"
+          className="h-9 rounded-full bg-[#E8C547] px-4 text-sm font-semibold text-[#080C10] hover:bg-[#d4b33f]"
         >
           <Plus size={14} className="mr-1.5" />
           New Note
         </Button>
       </div>
 
-      {/* New note form */}
       {showForm && (
-        <div className="rounded-xl border-2 border-[#FF5733]/20 bg-white/90 p-4 space-y-3">
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-4 space-y-3">
           <Textarea
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
             placeholder="Write your note… tips, reminders, ideas"
             rows={4}
             autoFocus
-            className="resize-none border-[#D4C9B0] bg-[#F8F4EC] text-sm focus-visible:border-[#FF5733]"
+            className="resize-none border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.03)] text-sm text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus-visible:border-[#E8C547]"
           />
           <div className="flex gap-2">
             <Button
               onClick={addNote}
               disabled={adding || !newContent.trim()}
-              className="rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-50"
+              className="h-8 rounded-full bg-[#E8C547] px-4 text-xs font-semibold text-[#080C10] hover:bg-[#d4b33f] disabled:opacity-50"
             >
               {adding ? "Saving…" : "Save Note"}
             </Button>
             <Button
               variant="outline"
               onClick={() => { setShowForm(false); setNewContent(""); }}
-              className="rounded-full border-[#D4C9B0] px-4 text-sm"
+              className="h-8 rounded-full border-[rgba(255,255,255,0.08)] bg-transparent text-xs text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
             >
               Cancel
             </Button>
@@ -136,19 +134,18 @@ export function NotesClient({
         </div>
       )}
 
-      {/* Notes list */}
       {notes.length === 0 ? (
-        <div className="flex flex-col items-center rounded-2xl border-2 border-dashed border-[#D4C9B0] bg-[#F5ECD7] py-16 text-center">
-          <BookOpen size={40} className="mb-3 text-[#D4C9B0]" />
-          <p className="font-medium text-[#0D1B2A]">No notes yet</p>
-          <p className="mt-1 text-sm text-[#5A6B7A]">Jot down tips, reminders, or ideas</p>
+        <div className="flex flex-col items-center rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] py-16 text-center">
+          <BookOpen size={40} className="mb-3 text-[rgba(240,237,230,0.2)]" />
+          <p className="font-medium text-[#F0EDE6]">No notes yet</p>
+          <p className="mt-1 text-sm text-[rgba(240,237,230,0.45)]">Jot down tips, reminders, or ideas</p>
         </div>
       ) : (
         <div className="space-y-3">
           {notes.map((note) => (
             <div
               key={note.id}
-              className="group rounded-xl border border-[#D4C9B0] bg-white/80 p-4"
+              className="group rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-4"
             >
               {editingId === note.id ? (
                 <div className="space-y-3">
@@ -157,7 +154,7 @@ export function NotesClient({
                     onChange={(e) => setEditContent(e.target.value)}
                     rows={4}
                     autoFocus
-                    className="resize-none border-[#D4C9B0] bg-[#F8F4EC] text-sm focus-visible:border-[#FF5733]"
+                    className="resize-none border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-sm text-[#F0EDE6] focus-visible:border-[#E8C547]"
                   />
                   <div className="flex gap-2">
                     <button
@@ -172,7 +169,7 @@ export function NotesClient({
                     <button
                       type="button"
                       onClick={() => setEditingId(null)}
-                      className="flex items-center gap-1 rounded-full border border-[#D4C9B0] px-3 py-1.5 text-xs text-[#5A6B7A] hover:bg-[#EDE4CF]"
+                      className="flex items-center gap-1 rounded-full border border-[rgba(255,255,255,0.08)] px-3 py-1.5 text-xs text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
                     >
                       <X size={12} />
                       Cancel
@@ -181,20 +178,18 @@ export function NotesClient({
                 </div>
               ) : (
                 <>
-                  {/* Note content */}
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#0D1B2A]">
+                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-[#F0EDE6]">
                     {note.content}
                   </p>
 
-                  {/* Footer */}
                   <div className="mt-3 flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {note.cityName && (
-                        <span className="rounded-full bg-[#F0E8D9] px-2 py-0.5 text-xs text-[#5A6B7A]">
-                          📍 {note.cityName}
+                        <span className="rounded-full bg-[rgba(255,255,255,0.06)] px-2 py-0.5 text-xs text-[rgba(240,237,230,0.5)]">
+                          {note.cityName}
                         </span>
                       )}
-                      <span className="text-xs text-[#A0AEBF]">
+                      <span className="text-xs text-[rgba(240,237,230,0.35)]">
                         {timeAgo(note.updatedAt)}
                       </span>
                     </div>
@@ -202,7 +197,7 @@ export function NotesClient({
                       <button
                         type="button"
                         onClick={() => startEdit(note)}
-                        className="rounded p-1.5 text-[#A0AEBF] hover:bg-[#EDE4CF] hover:text-[#0D1B2A] transition-colors"
+                        className="rounded p-1.5 text-[rgba(240,237,230,0.35)] hover:bg-[rgba(255,255,255,0.06)] hover:text-[#F0EDE6] transition-colors"
                       >
                         <Pencil size={13} />
                       </button>
@@ -210,7 +205,7 @@ export function NotesClient({
                         type="button"
                         onClick={() => deleteNote(note.id)}
                         disabled={deletingId === note.id}
-                        className="rounded p-1.5 text-[#A0AEBF] hover:bg-[#E11D48]/10 hover:text-[#E11D48] transition-colors disabled:opacity-40"
+                        className="rounded p-1.5 text-[rgba(240,237,230,0.35)] hover:bg-[#E05252]/10 hover:text-[#E05252] transition-colors disabled:opacity-40"
                       >
                         <Trash2 size={13} />
                       </button>

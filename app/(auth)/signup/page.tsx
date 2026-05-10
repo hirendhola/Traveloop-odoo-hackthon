@@ -6,7 +6,7 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowRight, User, Mail, Lock } from "lucide-react";
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -64,29 +64,24 @@ export default function SignupPage() {
   }
 
   if (success) {
-    return (
-      <VerifyEmailState email={email} />
-    );
+    return <VerifyEmailState email={email} />;
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="text-center">
-        <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-foreground">
+        <h1 className="font-heading text-3xl font-light text-[#F0EDE6]">
           Start Your Journey
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">Create your Traveloop account</p>
+        <p className="mt-2 text-sm text-[rgba(240,237,230,0.45)]">Create your Traveloop account</p>
       </div>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="sr-only">Sign Up</CardTitle>
-          <CardDescription className="sr-only">Create a new Traveloop account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSignup} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-6 backdrop-blur-sm">
+        <form onSubmit={handleSignup} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-[rgba(240,237,230,0.7)]">Name</Label>
+            <div className="relative">
+              <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="name"
                 type="text"
@@ -94,11 +89,15 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-[rgba(240,237,230,0.7)]">Email</Label>
+            <div className="relative">
+              <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="email"
                 type="email"
@@ -106,11 +105,15 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-[rgba(240,237,230,0.7)]">Password</Label>
+            <div className="relative">
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="password"
                 type="password"
@@ -119,11 +122,15 @@ export default function SignupPage() {
                 minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword" className="text-[rgba(240,237,230,0.7)]">Confirm Password</Label>
+            <div className="relative">
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.35)]" />
               <Input
                 id="confirmPassword"
                 type="password"
@@ -132,24 +139,30 @@ export default function SignupPage() {
                 minLength={8}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                className="h-11 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-10 text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
               />
             </div>
+          </div>
 
-            {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-[#E05252]">{error}</p>}
 
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Creating account..." : "Sign Up"}
-            </Button>
+          <Button
+            type="submit"
+            disabled={loading}
+            className="h-11 w-full rounded-full bg-[#E8C547] text-sm font-semibold text-[#080C10] transition-all hover:bg-[#d4b33f] hover:shadow-lg hover:shadow-[#E8C547]/20"
+          >
+            {loading ? "Creating account..." : "Sign Up"}
+            <ArrowRight size={16} className="ml-2" />
+          </Button>
 
-            <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link href="/login" className="text-primary underline-offset-2 hover:text-primary/80 hover:underline">
-                Sign In
-              </Link>
-            </p>
-          </form>
-        </CardContent>
-      </Card>
+          <p className="text-center text-sm text-[rgba(240,237,230,0.45)]">
+            Already have an account?{" "}
+            <Link href="/login" className="text-[#E8C547] underline-offset-2 hover:text-[#d4b33f] hover:underline">
+              Sign In
+            </Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
@@ -183,41 +196,39 @@ function VerifyEmailState({ email }: { email: string }) {
 
   return (
     <div className="text-center">
-      <h1 className="font-(family-name:--font-heading) text-3xl font-bold text-foreground">
+      <h1 className="font-heading text-3xl font-light text-[#F0EDE6]">
         Check Your Email
       </h1>
-      <Card className="mt-6">
-        <CardContent className="pt-6 text-center space-y-4">
-          <p className="text-secondary">
-            We sent a verification link to <strong>{email}</strong>.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Click the link in the email to activate your account.
-          </p>
+      <div className="mt-6 rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-6">
+        <p className="text-[#F0EDE6]">
+          We sent a verification link to <strong>{email}</strong>.
+        </p>
+        <p className="mt-2 text-sm text-[rgba(240,237,230,0.45)]">
+          Click the link in the email to activate your account.
+        </p>
 
-          {resendSent && (
-            <p className="text-sm text-secondary">Verification email resent!</p>
-          )}
-          {resendError && <p className="text-sm text-destructive">{resendError}</p>}
+        {resendSent && (
+          <p className="mt-4 text-sm text-[#7D9B76]">Verification email resent!</p>
+        )}
+        {resendError && <p className="mt-4 text-sm text-[#E05252]">{resendError}</p>}
 
-          <Button
-            type="button"
-            variant="outline"
-            disabled={resendLoading || resendSent}
-            onClick={handleResend}
-            className="w-full"
-          >
-            {resendLoading ? "Sending..." : "Resend Verification Email"}
-          </Button>
+        <Button
+          type="button"
+          variant="outline"
+          disabled={resendLoading || resendSent}
+          onClick={handleResend}
+          className="mt-4 w-full border-[rgba(255,255,255,0.08)] text-[#F0EDE6] hover:bg-[rgba(255,255,255,0.06)]"
+        >
+          {resendLoading ? "Sending..." : "Resend Verification Email"}
+        </Button>
 
-          <Link
-            href="/login"
-            className="inline-block text-sm text-primary underline-offset-2 hover:text-primary/80 hover:underline"
-          >
-            Back to Login
-          </Link>
-        </CardContent>
-      </Card>
+        <Link
+          href="/login"
+          className="mt-4 inline-block text-sm text-[#E8C547] underline-offset-2 hover:text-[#d4b33f] hover:underline"
+        >
+          Back to Login
+        </Link>
+      </div>
     </div>
   );
 }
