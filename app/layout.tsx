@@ -2,8 +2,8 @@ import { Playfair_Display, DM_Sans } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils";
-
+import { cn } from "@/lib/utils"
+import { TooltipProvider } from "@/components/ui/tooltip"
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-heading",
@@ -28,7 +28,9 @@ export default function RootLayout({
       className={cn("antialiased", playfair.variable, dmSans.variable)}
     >
       <body className="font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
