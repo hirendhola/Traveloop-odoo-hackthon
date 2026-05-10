@@ -1,0 +1,236 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// better-auth tables
+// ============================================================
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+
+  sessions      Session[]
+  accounts      Account[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime
+  updatedAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime
+  updatedAt  DateTime
+
+  @@unique([identifier, value])
+}
+
+// ============================================================
+// App tables
+// ============================================================
+
+model UserProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  languagePreference  String   @default("en")
+  isAdmin             Boolean  @default(false)
+  createdAt           DateTime @default(now())
+
+  savedDestinations   SavedDestination[]
+}
+
+model Trip {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  description   String?
+  startDate     DateTime
+  endDate       DateTime
+  coverPhotoUrl String?
+  isPublic      Boolean  @default(false)
+  shareToken    String?  @unique
+  totalBudget   Decimal? @db.Decimal(10, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  stops         Stop[]
+  expenses      TripExpense[]
+  checklist     ChecklistItem[]
+  notes         TripNote[]
+}
+
+model Stop {
+  id          String   @id @default(cuid())
+  tripId      String
+  cityId      String
+  startDate   DateTime
+  endDate     DateTime
+  orderIndex  Int
+  createdAt   DateTime @default(now())
+
+  trip        Trip       @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  city        City       @relation(fields: [cityId], references: [id])
+  activities  StopActivity[]
+  notes       TripNote[]
+}
+
+model City {
+  id              String   @id @default(cuid())
+  name            String
+  country         String
+  region          String
+  costIndex       Decimal  @db.Decimal(10, 2)
+  popularityScore Decimal  @db.Decimal(10, 2)
+  coverImageUrl   String?
+  description     String?
+  createdAt       DateTime @default(now())
+
+  stops           Stop[]
+  activities      Activity[]
+  savedBy         SavedDestination[]
+}
+
+model Activity {
+  id              String       @id @default(cuid())
+  cityId          String
+  name            String
+  description     String?
+  type            ActivityType
+  estimatedCost   Decimal      @db.Decimal(10, 2)
+  durationMinutes Int
+  imageUrl        String?
+  createdAt       DateTime     @default(now())
+
+  city            City         @relation(fields: [cityId], references: [id])
+  stopActivities  StopActivity[]
+}
+
+enum ActivityType {
+  sightseeing
+  food
+  adventure
+  culture
+  shopping
+  other
+}
+
+model StopActivity {
+  id            String   @id @default(cuid())
+  stopId        String
+  activityId    String
+  scheduledTime String?  // stored as "HH:MM" string
+  notes         String?
+  createdAt     DateTime @default(now())
+
+  stop          Stop     @relation(fields: [stopId], references: [id], onDelete: Cascade)
+  activity      Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([stopId, activityId])
+}
+
+enum ExpenseCategory {
+  transport
+  stay
+  activity
+  meals
+  other
+}
+
+model TripExpense {
+  id        String          @id @default(cuid())
+  tripId    String
+  stopId    String?
+  category  ExpenseCategory
+  label     String
+  amount    Decimal         @db.Decimal(10, 2)
+  createdAt DateTime        @default(now())
+
+  trip      Trip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+enum ChecklistCategory {
+  clothing
+  documents
+  electronics
+  toiletries
+  other
+}
+
+model ChecklistItem {
+  id        String            @id @default(cuid())
+  tripId    String
+  label     String
+  category  ChecklistCategory
+  isPacked  Boolean           @default(false)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  trip      Trip @relation(fields: [tripId], references: [id], onDelete: Cascade)
+}
+
+model TripNote {
+  id        String   @id @default(cuid())
+  tripId    String
+  stopId    String?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trip      Trip  @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  stop      Stop? @relation(fields: [stopId], references: [id])
+}
+
+model SavedDestination {
+  id          String   @id @default(cuid())
+  userId      String
+  cityId      String
+  createdAt   DateTime @default(now())
+
+  city        City @relation(fields: [cityId], references: [id])
+  userProfile UserProfile @relation(fields: [userId], references: [userId])
+
+  @@unique([userId, cityId])
+}

@@ -10,7 +10,7 @@
 
 # testing
 /coverage
-traveloop-plan-v2.md
+.env
 # next.js
 /.next/
 /out/
