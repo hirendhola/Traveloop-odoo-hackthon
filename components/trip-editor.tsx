@@ -70,30 +70,30 @@ function CitySearch({ onSelect }: { onSelect: (city: CityResult) => void }) {
   return (
     <div className="relative">
       <div className="relative">
-        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A0AEBF]" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.4)]" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search cities…"
-          className="border-[#D4C9B0] bg-white/60 pl-8"
+          className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-8"
         />
         {loading && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#FF5733] border-t-transparent" />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#E8C547] border-t-transparent" />
         )}
       </div>
       {open && results.length > 0 && (
-        <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-[#D4C9B0] bg-white shadow-lg">
+        <div className="absolute z-20 mt-1 w-full overflow-hidden rounded-xl border border-[rgba(255,255,255,0.12)] bg-[#1B2333] shadow-lg">
           {results.map((city) => (
             <button
               key={city.id}
               type="button"
               onClick={() => { onSelect(city); setQuery(""); setResults([]); setOpen(false); }}
-              className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-[#F5ECD7]"
+              className="flex w-full items-center gap-3 px-4 py-2.5 text-left hover:bg-[rgba(255,255,255,0.08)]"
             >
-              <MapPin size={14} className="shrink-0 text-[#FF5733]" />
+              <MapPin size={14} className="shrink-0 text-[#E8C547]" />
               <div>
-                <p className="text-sm font-medium text-[#0D1B2A]">{city.name}</p>
-                <p className="text-xs text-[#5A6B7A]">{city.country} · {city.region}</p>
+                <p className="text-sm font-medium text-[#F0EDE6]">{city.name}</p>
+                <p className="text-xs text-[rgba(240,237,230,0.45)]">{city.country} · {city.region}</p>
               </div>
             </button>
           ))}
@@ -127,36 +127,36 @@ function ActivityPicker({
   const available = results.filter((a) => !existingIds.includes(a.id));
 
   return (
-    <div className="mt-2 rounded-xl border border-[#D4C9B0] bg-[#F8F4EC] p-3">
+    <div className="mt-2 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-3">
       <div className="relative mb-2">
-        <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[#A0AEBF]" />
+        <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[rgba(240,237,230,0.4)]" />
         <Input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search activities…"
-          className="border-[#D4C9B0] bg-white pl-7 py-1.5 text-xs h-8"
+          className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] pl-7 py-1.5 text-xs h-8"
         />
       </div>
       <div className="max-h-52 overflow-y-auto space-y-1">
-        {loading && <p className="py-2 text-center text-xs text-[#A0AEBF]">Loading…</p>}
+        {loading && <p className="py-2 text-center text-xs text-[rgba(240,237,230,0.4)]">Loading…</p>}
         {!loading && available.length === 0 && (
-          <p className="py-2 text-center text-xs text-[#A0AEBF]">No activities found</p>
+          <p className="py-2 text-center text-xs text-[rgba(240,237,230,0.4)]">No activities found</p>
         )}
         {available.map((activity) => (
           <button
             key={activity.id}
             type="button"
             onClick={() => onAdd(activity)}
-            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-white transition-colors"
+            className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left hover:bg-[rgba(255,255,255,0.04)] transition-colors"
           >
             <span className="text-base">{TYPE_EMOJI[activity.type] ?? "✨"}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-[#0D1B2A] truncate">{activity.name}</p>
-              <p className="text-xs text-[#A0AEBF]">
+              <p className="text-xs font-medium text-[#F0EDE6] truncate">{activity.name}</p>
+              <p className="text-xs text-[rgba(240,237,230,0.4)]">
                 {activity.durationMinutes}m · ${activity.estimatedCost}
               </p>
             </div>
-            <Plus size={14} className="shrink-0 text-[#FF5733]" />
+            <Plus size={14} className="shrink-0 text-[#E8C547]" />
           </button>
         ))}
       </div>
@@ -327,49 +327,49 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
   return (
     <div className="space-y-6">
       {/* Trip Details Section */}
-      <div className="rounded-2xl border border-[#D4C9B0] bg-white/80 p-5">
-        <h2 className="mb-4 font-(family-name:--font-heading) text-lg font-semibold text-[#0D1B2A]">
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-5">
+        <h2 className="mb-4 font-heading text-lg font-semibold text-[#F0EDE6]">
           Trip Details
         </h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-1.5 sm:col-span-2">
-            <Label className="text-xs text-[#5A6B7A]">Trip Name</Label>
+            <Label className="text-xs text-[rgba(240,237,230,0.45)]">Trip Name</Label>
             <Input
               value={trip.name}
               onChange={(e) => setTrip((p) => ({ ...p, name: e.target.value }))}
-              className="border-[#D4C9B0] bg-[#F8F4EC]"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
             />
           </div>
           <div className="space-y-1.5 sm:col-span-2">
-            <Label className="text-xs text-[#5A6B7A]">Description</Label>
+            <Label className="text-xs text-[rgba(240,237,230,0.45)]">Description</Label>
             <Textarea
               value={trip.description ?? ""}
               onChange={(e) => setTrip((p) => ({ ...p, description: e.target.value }))}
               rows={2}
-              className="resize-none border-[#D4C9B0] bg-[#F8F4EC]"
+              className="resize-none border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
               placeholder="What's this trip about?"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#5A6B7A]">Start Date</Label>
+            <Label className="text-xs text-[rgba(240,237,230,0.45)]">Start Date</Label>
             <Input
               type="date"
               value={trip.startDate.slice(0, 10)}
               onChange={(e) => setTrip((p) => ({ ...p, startDate: e.target.value }))}
-              className="border-[#D4C9B0] bg-[#F8F4EC]"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#5A6B7A]">End Date</Label>
+            <Label className="text-xs text-[rgba(240,237,230,0.45)]">End Date</Label>
             <Input
               type="date"
               value={trip.endDate.slice(0, 10)}
               onChange={(e) => setTrip((p) => ({ ...p, endDate: e.target.value }))}
-              className="border-[#D4C9B0] bg-[#F8F4EC]"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
             />
           </div>
           <div className="space-y-1.5">
-            <Label className="text-xs text-[#5A6B7A]">Total Budget ($)</Label>
+            <Label className="text-xs text-[rgba(240,237,230,0.45)]">Total Budget ($)</Label>
             <Input
               type="number"
               min="0"
@@ -377,7 +377,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
               value={trip.totalBudget ?? ""}
               onChange={(e) => setTrip((p) => ({ ...p, totalBudget: e.target.value ? parseFloat(e.target.value) : null }))}
               placeholder="e.g. 3000"
-              className="border-[#D4C9B0] bg-[#F8F4EC]"
+              className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
             />
           </div>
         </div>
@@ -386,13 +386,13 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
             type="button"
             onClick={saveDetails}
             disabled={savingDetails}
-            className="rounded-full bg-[#FF5733] px-5 text-[#0D1B2A] hover:bg-[#FF8A6C]"
+            className="rounded-full bg-[#E8C547] px-5 text-[#F0EDE6] hover:bg-[#d4b33f]"
           >
             <Save size={14} className="mr-1.5" />
             {savingDetails ? "Saving…" : "Save Changes"}
           </Button>
           {detailsMsg && (
-            <span className={`text-sm ${detailsMsg === "Saved!" ? "text-[#7D9B76]" : "text-[#E11D48]"}`}>
+            <span className={`text-sm ${detailsMsg === "Saved!" ? "text-[#7D9B76]" : "text-[#E05252]"}`}>
               {detailsMsg}
             </span>
           )}
@@ -400,12 +400,12 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
       </div>
 
       {/* Stops Section */}
-      <div className="rounded-2xl border border-[#D4C9B0] bg-white/80 p-5">
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-5">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-(family-name:--font-heading) text-lg font-semibold text-[#0D1B2A]">
+          <h2 className="font-heading text-lg font-semibold text-[#F0EDE6]">
             Itinerary Stops
           </h2>
-          <span className="text-xs text-[#A0AEBF]">{trip.stops.length} {trip.stops.length === 1 ? "stop" : "stops"}</span>
+          <span className="text-xs text-[rgba(240,237,230,0.4)]">{trip.stops.length} {trip.stops.length === 1 ? "stop" : "stops"}</span>
         </div>
 
         {/* Stops list */}
@@ -413,17 +413,17 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
           {trip.stops.map((stop, idx) => (
             <div
               key={stop.id}
-              className="overflow-hidden rounded-xl border border-[#D4C9B0] bg-[#F8F4EC]"
+              className="overflow-hidden rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)]"
             >
               {/* Stop header */}
-              <div className="flex items-center justify-between gap-3 bg-[#0D1B2A] px-4 py-3">
+              <div className="flex items-center justify-between gap-3 bg-[#0F1419] px-4 py-3">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#FF5733]/20 text-xs font-bold text-[#FF5733]">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E8C547]/20 text-xs font-bold text-[#E8C547]">
                     {idx + 1}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[#F5ECD7]">{stop.city.name}</p>
-                    <p className="text-xs text-[#A0AEBF]">
+                    <p className="truncate text-sm font-semibold text-[#F0EDE6]">{stop.city.name}</p>
+                    <p className="text-xs text-[rgba(240,237,230,0.4)]">
                       {new Date(stop.startDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })} –{" "}
                       {new Date(stop.endDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                     </p>
@@ -434,7 +434,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                     type="button"
                     onClick={() => moveStop(stop.id, "up")}
                     disabled={idx === 0}
-                    className="rounded p-1 text-[#A0AEBF] hover:bg-white/10 hover:text-[#F5ECD7] disabled:opacity-30"
+                    className="rounded p-1 text-[rgba(240,237,230,0.4)] hover:bg-[rgba(255,255,255,0.04)]/10 hover:text-[#F0EDE6] disabled:opacity-30"
                   >
                     <ChevronUp size={15} />
                   </button>
@@ -442,14 +442,14 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                     type="button"
                     onClick={() => moveStop(stop.id, "down")}
                     disabled={idx === trip.stops.length - 1}
-                    className="rounded p-1 text-[#A0AEBF] hover:bg-white/10 hover:text-[#F5ECD7] disabled:opacity-30"
+                    className="rounded p-1 text-[rgba(240,237,230,0.4)] hover:bg-[rgba(255,255,255,0.04)]/10 hover:text-[#F0EDE6] disabled:opacity-30"
                   >
                     <ChevronDown size={15} />
                   </button>
                   <button
                     type="button"
                     onClick={() => deleteStop(stop.id)}
-                    className="rounded p-1 text-[#A0AEBF] hover:bg-[#E11D48]/20 hover:text-[#E11D48]"
+                    className="rounded p-1 text-[rgba(240,237,230,0.4)] hover:bg-[#E05252]/20 hover:text-[#E05252]"
                   >
                     <Trash2 size={15} />
                   </button>
@@ -459,21 +459,21 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
               {/* Activities */}
               <div className="p-3 space-y-2">
                 {stop.activities.length === 0 && (
-                  <p className="text-center text-xs text-[#A0AEBF] py-2">No activities yet</p>
+                  <p className="text-center text-xs text-[rgba(240,237,230,0.4)] py-2">No activities yet</p>
                 )}
                 {stop.activities.map((sa) => (
-                  <div key={sa.id} className="flex items-center gap-2 rounded-lg bg-white px-3 py-2">
+                  <div key={sa.id} className="flex items-center gap-2 rounded-lg bg-[rgba(255,255,255,0.04)] px-3 py-2">
                     <span className="text-sm">{TYPE_EMOJI[sa.activity.type] ?? "✨"}</span>
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-xs font-medium text-[#0D1B2A]">{sa.activity.name}</p>
-                      <p className="text-xs text-[#A0AEBF]">
+                      <p className="truncate text-xs font-medium text-[#F0EDE6]">{sa.activity.name}</p>
+                      <p className="text-xs text-[rgba(240,237,230,0.4)]">
                         {sa.activity.durationMinutes}m · ${sa.activity.estimatedCost}
                       </p>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeActivity(stop.id, sa.activityId)}
-                      className="shrink-0 rounded p-0.5 text-[#A0AEBF] hover:text-[#E11D48]"
+                      className="shrink-0 rounded p-0.5 text-[rgba(240,237,230,0.4)] hover:text-[#E05252]"
                     >
                       <X size={13} />
                     </button>
@@ -491,7 +491,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                     <button
                       type="button"
                       onClick={() => setPickingActivityFor(null)}
-                      className="mt-2 text-xs text-[#A0AEBF] hover:text-[#5A6B7A]"
+                      className="mt-2 text-xs text-[rgba(240,237,230,0.4)] hover:text-[rgba(240,237,230,0.45)]"
                     >
                       Cancel
                     </button>
@@ -500,7 +500,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                   <button
                     type="button"
                     onClick={() => setPickingActivityFor(stop.id)}
-                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[#D4C9B0] py-2 text-xs text-[#5A6B7A] hover:border-[#FF5733] hover:text-[#FF5733] transition-colors"
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-dashed border-[rgba(255,255,255,0.08)] py-2 text-xs text-[rgba(240,237,230,0.45)] hover:border-[#E8C547] hover:text-[#E8C547] transition-colors"
                   >
                     <Plus size={13} />
                     Add Activity
@@ -513,36 +513,36 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
 
         {/* Add Stop */}
         {addingStop ? (
-          <div className="mt-4 rounded-xl border-2 border-[#FF5733]/30 bg-[#F5ECD7] p-4 space-y-3">
-            <p className="text-sm font-medium text-[#0D1B2A]">New Stop</p>
+          <div className="mt-4 rounded-xl border-2 border-[#E8C547]/30 bg-[rgba(255,255,255,0.04)] p-4 space-y-3">
+            <p className="text-sm font-medium text-[#F0EDE6]">New Stop</p>
             <CitySearch onSelect={(city) => setNewStopCity(city)} />
             {newStopCity && (
-              <div className="flex items-center gap-2 rounded-lg bg-[#FF5733]/10 px-3 py-2">
-                <MapPin size={13} className="text-[#FF5733]" />
-                <span className="text-sm font-medium text-[#0D1B2A]">{newStopCity.name}, {newStopCity.country}</span>
-                <button type="button" onClick={() => setNewStopCity(null)} className="ml-auto text-[#A0AEBF] hover:text-[#E11D48]">
+              <div className="flex items-center gap-2 rounded-lg bg-[#E8C547]/10 px-3 py-2">
+                <MapPin size={13} className="text-[#E8C547]" />
+                <span className="text-sm font-medium text-[#F0EDE6]">{newStopCity.name}, {newStopCity.country}</span>
+                <button type="button" onClick={() => setNewStopCity(null)} className="ml-auto text-[rgba(240,237,230,0.4)] hover:text-[#E05252]">
                   <X size={13} />
                 </button>
               </div>
             )}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <Label className="text-xs text-[#5A6B7A]">From</Label>
+                <Label className="text-xs text-[rgba(240,237,230,0.45)]">From</Label>
                 <Input
                   type="date"
                   value={newStopStart}
                   onChange={(e) => setNewStopStart(e.target.value)}
-                  className="border-[#D4C9B0] bg-white text-sm"
+                  className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-sm"
                 />
               </div>
               <div className="space-y-1">
-                <Label className="text-xs text-[#5A6B7A]">To</Label>
+                <Label className="text-xs text-[rgba(240,237,230,0.45)]">To</Label>
                 <Input
                   type="date"
                   value={newStopEnd}
                   min={newStopStart}
                   onChange={(e) => setNewStopEnd(e.target.value)}
-                  className="border-[#D4C9B0] bg-white text-sm"
+                  className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-sm"
                 />
               </div>
             </div>
@@ -551,7 +551,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                 type="button"
                 onClick={submitAddStop}
                 disabled={!newStopCity || !newStopStart || !newStopEnd || addingStopLoading}
-                className="rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-50"
+                className="rounded-full bg-[#E8C547] px-4 text-sm text-[#F0EDE6] hover:bg-[#d4b33f] disabled:opacity-50"
               >
                 {addingStopLoading ? "Adding…" : "Add Stop"}
               </Button>
@@ -559,7 +559,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
                 type="button"
                 variant="outline"
                 onClick={() => { setAddingStop(false); setNewStopCity(null); setNewStopStart(""); setNewStopEnd(""); }}
-                className="rounded-full border-[#D4C9B0] px-4 text-sm"
+                className="rounded-full border-[rgba(255,255,255,0.08)] px-4 text-sm"
               >
                 Cancel
               </Button>
@@ -569,7 +569,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
           <button
             type="button"
             onClick={() => setAddingStop(true)}
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#D4C9B0] py-3 text-sm text-[#5A6B7A] transition-colors hover:border-[#FF5733] hover:text-[#FF5733]"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.08)] py-3 text-sm text-[rgba(240,237,230,0.45)] transition-colors hover:border-[#E8C547] hover:text-[#E8C547]"
           >
             <Plus size={16} />
             Add Stop
@@ -580,7 +580,7 @@ export function TripEditor({ initialTrip }: { initialTrip: TripData }) {
       {/* View Itinerary link */}
       <div className="flex justify-end pb-4">
         <Link href={`/trips/${trip.id}`}>
-          <Button variant="outline" className="rounded-full border-[#D4C9B0] hover:bg-[#EDE4CF]">
+          <Button variant="outline" className="rounded-full border-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.06)]">
             View Itinerary →
           </Button>
         </Link>

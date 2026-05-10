@@ -42,7 +42,7 @@ export function ShareButton({ tripId, shareToken }: { tripId: string; shareToken
       <button
         onClick={enable}
         disabled={loading}
-        className="flex items-center gap-1.5 rounded-full border border-[#D4C9B0] bg-white/60 px-3 py-1.5 text-xs text-[#5A6B7A] transition-colors hover:border-[#7D9B76] hover:text-[#7D9B76] disabled:opacity-60"
+        className="flex items-center gap-1.5 rounded-full border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-3 py-1.5 text-xs text-[rgba(240,237,230,0.55)] transition-colors hover:border-[#E8C547] hover:text-[#E8C547] disabled:opacity-60"
       >
         <Share2 size={13} />
         {loading ? "Generating…" : "Share Trip"}
@@ -51,12 +51,12 @@ export function ShareButton({ tripId, shareToken }: { tripId: string; shareToken
   }
 
   return (
-    <div className="flex items-center gap-1.5 rounded-full border border-[#7D9B76]/40 bg-[#7D9B76]/10 px-3 py-1.5">
-      <span className="max-w-40 truncate text-xs text-[#0D1B2A]">{url}</span>
+    <div className="flex items-center gap-1.5 rounded-full border border-[rgba(232,197,71,0.25)] bg-[rgba(232,197,71,0.08)] px-3 py-1.5">
+      <span className="max-w-40 truncate text-xs text-[#F0EDE6]">{url}</span>
       <button
         type="button"
         onClick={copy}
-        className="shrink-0 text-[#7D9B76] transition-colors hover:text-[#5A8A5A]"
+        className="shrink-0 text-[#E8C547] transition-colors hover:text-[#d4b33f]"
       >
         {copied ? <Check size={13} /> : <Copy size={13} />}
       </button>
@@ -65,7 +65,7 @@ export function ShareButton({ tripId, shareToken }: { tripId: string; shareToken
         onClick={disable}
         disabled={disabling}
         title="Disable sharing"
-        className="shrink-0 text-[#A0AEBF] transition-colors hover:text-[#E11D48]"
+        className="shrink-0 text-[rgba(240,237,230,0.4)] transition-colors hover:text-[#E05252]"
       >
         <X size={13} />
       </button>

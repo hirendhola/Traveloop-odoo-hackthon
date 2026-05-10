@@ -5,10 +5,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SaveCityButton } from "@/components/save-city-button";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from "@/components/ui/alert-dialog";
-import { Save, Upload, MapPin, Trash2, Camera } from "lucide-react";
+import { Save, MapPin, Trash2, Camera } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 type SavedCity = { id: string; name: string; country: string; coverImageUrl: string | null };
 
@@ -100,12 +108,12 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
-          className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#0D1B2A] ring-4 ring-[#D4C9B0]"
+          className="group relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-[#0F1419] ring-2 ring-[rgba(255,255,255,0.08)]"
         >
           {imagePreview ? (
-            <img src={imagePreview} alt={name} className="h-full w-full object-cover" />
+            <Image src={imagePreview} alt={name} fill className="object-cover" />
           ) : (
-            <span className="font-(family-name:--font-heading) text-3xl text-[#F5ECD7]">{initials}</span>
+            <span className="font-heading text-3xl text-[#F0EDE6]">{initials}</span>
           )}
           <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
             <Camera size={20} className="text-white" />
@@ -116,46 +124,49 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
             </div>
           )}
         </button>
-        <p className="text-xs text-[#A0AEBF]">Click to change photo</p>
+        <p className="text-xs text-[rgba(240,237,230,0.35)]">Click to change photo</p>
         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
       </div>
 
       {/* Profile form */}
-      <div className="rounded-2xl border border-[#D4C9B0] bg-white/80 p-6 space-y-4">
-        <h2 className="font-(family-name:--font-heading) text-lg font-semibold text-[#0D1B2A]">
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-6 space-y-4">
+        <h2 className="font-heading text-lg font-light text-[#F0EDE6]">
           Profile Info
         </h2>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-[#5A6B7A]">Full Name</Label>
+          <Label className="text-xs text-[rgba(240,237,230,0.45)]">Full Name</Label>
           <Input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border-[#D4C9B0] bg-[#F8F4EC]"
+            className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.3)] focus:border-[#E8C547] focus:ring-[#E8C547]/20"
           />
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-[#5A6B7A]">Email</Label>
+          <Label className="text-xs text-[rgba(240,237,230,0.45)]">Email</Label>
           <Input
             value={email}
             disabled
-            className="border-[#D4C9B0] bg-[#F0EAE0] text-[#A0AEBF] cursor-not-allowed"
+            className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[rgba(240,237,230,0.4)] cursor-not-allowed"
           />
-          <p className="text-xs text-[#A0AEBF]">Email cannot be changed</p>
+          <p className="text-xs text-[rgba(240,237,230,0.3)]">Email cannot be changed</p>
         </div>
 
         <div className="space-y-1.5">
-          <Label className="text-xs text-[#5A6B7A]">Language Preference</Label>
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value)}
-            className="h-10 w-full rounded-lg border border-[#D4C9B0] bg-[#F8F4EC] px-3 text-sm text-[#0D1B2A] focus:outline-none focus:ring-1 focus:ring-[#FF5733]"
-          >
-            {LANGUAGES.map((l) => (
-              <option key={l.value} value={l.value}>{l.label}</option>
-            ))}
-          </select>
+          <Label className="text-xs text-[rgba(240,237,230,0.45)]">Language Preference</Label>
+          <Select value={language} onValueChange={(v) => v !== null && setLanguage(v)}>
+            <SelectTrigger className="h-10 w-full rounded-lg border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-sm text-[#F0EDE6] focus:ring-[#E8C547]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl border-[rgba(255,255,255,0.12)] bg-[#1B2333]">
+              {LANGUAGES.map((l) => (
+                <SelectItem key={l.value} value={l.value} className="text-[#F0EDE6] focus:bg-[rgba(255,255,255,0.08)] focus:text-[#F0EDE6]">
+                  {l.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center gap-3 pt-1">
@@ -163,13 +174,13 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
             type="button"
             onClick={saveProfile}
             disabled={saving || uploading}
-            className="rounded-full bg-[#FF5733] px-5 text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-60"
+            className="h-10 rounded-full bg-[#E8C547] px-5 text-sm font-semibold text-[#080C10] hover:bg-[#d4b33f] disabled:opacity-60"
           >
             <Save size={14} className="mr-1.5" />
             {saving ? "Saving…" : "Save Changes"}
           </Button>
           {msg && (
-            <span className={`text-sm ${msg.includes("saved") ? "text-[#7D9B76]" : "text-[#E11D48]"}`}>
+            <span className={`text-sm ${msg.includes("saved") ? "text-[#7D9B76]" : "text-[#E05252]"}`}>
               {msg}
             </span>
           )}
@@ -177,15 +188,15 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
       </div>
 
       {/* Saved destinations */}
-      <div className="rounded-2xl border border-[#D4C9B0] bg-white/80 p-6">
-        <h2 className="mb-4 font-(family-name:--font-heading) text-lg font-semibold text-[#0D1B2A]">
+      <div className="rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-6">
+        <h2 className="mb-4 font-heading text-lg font-light text-[#F0EDE6]">
           Saved Destinations
         </h2>
         {initialSavedCities.length === 0 ? (
           <div className="flex flex-col items-center py-8 text-center">
-            <MapPin size={32} className="mb-2 text-[#D4C9B0]" />
-            <p className="text-sm text-[#A0AEBF]">No saved destinations yet</p>
-            <Link href="/cities" className="mt-2 text-xs text-[#FF5733] hover:underline">
+            <MapPin size={32} className="mb-2 text-[rgba(240,237,230,0.2)]" />
+            <p className="text-sm text-[rgba(240,237,230,0.45)]">No saved destinations yet</p>
+            <Link href="/cities" className="mt-2 text-xs text-[#E8C547] hover:underline">
               Explore cities →
             </Link>
           </div>
@@ -194,26 +205,30 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
             {initialSavedCities.map((city) => (
               <div key={city.id} className="group relative overflow-hidden rounded-xl">
                 <Link href={`/cities/${city.id}`}>
-                  <div className="flex h-20 items-center justify-center bg-[#0D1B2A]">
+                  <div className="relative h-20">
                     {city.coverImageUrl ? (
-                      <img
+                      <Image
                         src={city.coverImageUrl}
                         alt={city.name}
-                        className="h-full w-full object-cover opacity-70"
+                        fill
+                        className="object-cover opacity-70 transition-opacity group-hover:opacity-90"
+                        sizes="200px"
                       />
                     ) : (
-                      <span className="font-(family-name:--font-heading) text-2xl text-[#F5ECD7]">
-                        {city.name.charAt(0)}
-                      </span>
+                      <div className="flex h-full items-center justify-center bg-[#0F1419]">
+                        <span className="font-heading text-2xl text-[#F0EDE6]">
+                          {city.name.charAt(0)}
+                        </span>
+                      </div>
                     )}
-                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
+                    <div className="absolute inset-0 bg-linear-to-t from-[rgba(8,12,16,0.85)] to-transparent" />
                     <div className="absolute bottom-2 left-2">
-                      <p className="text-xs font-semibold text-white">{city.name}</p>
-                      <p className="text-xs text-white/70">{city.country}</p>
+                      <p className="text-xs font-medium text-white">{city.name}</p>
+                      <p className="text-[10px] text-[rgba(255,255,255,0.65)]">{city.country}</p>
                     </div>
                   </div>
                 </Link>
-                <div className="absolute right-1.5 top-1.5">
+                <div className="absolute right-2 top-2">
                   <SaveCityButton cityId={city.id} initialSaved={true} />
                 </div>
               </div>
@@ -222,37 +237,39 @@ export function ProfileClient({ userId, initialName, email, initialImage, initia
         )}
       </div>
 
-      {/* Danger zone */}
-      <div className="rounded-2xl border border-[#E11D48]/20 bg-[#E11D48]/5 p-6">
-        <h2 className="mb-1 text-sm font-semibold text-[#E11D48]">Danger Zone</h2>
-        <p className="mb-4 text-xs text-[#5A6B7A]">
-          Permanently delete your account and all associated trips, plans, and data. This action cannot be undone.
+      {/* Delete account */}
+      <div className="rounded-2xl border border-[rgba(224,82,82,0.15)] bg-[rgba(224,82,82,0.04)] p-6">
+        <h2 className="font-heading text-lg font-light text-[#E05252]">Danger Zone</h2>
+        <p className="mt-1 text-sm text-[rgba(240,237,230,0.45)]">
+          Once you delete your account, there is no going back.
         </p>
         <AlertDialog>
           <AlertDialogTrigger>
             <Button
               variant="outline"
-              className="rounded-full border-[#E11D48]/40 text-[#E11D48] hover:bg-[#E11D48]/10 hover:border-[#E11D48]"
+              className="mt-4 h-10 gap-1 border-[rgba(224,82,82,0.2)] bg-transparent text-[#E05252] hover:bg-[rgba(224,82,82,0.1)]"
             >
-              <Trash2 size={14} className="mr-1.5" />
+              <Trash2 size={14} />
               Delete Account
             </Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="border-[rgba(255,255,255,0.08)] bg-[#0F1419]">
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete your account?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete your account, all your trips, expenses, checklists, and notes. This action <strong>cannot be undone</strong>.
+              <AlertDialogTitle className="text-[#F0EDE6]">Delete Account</AlertDialogTitle>
+              <AlertDialogDescription className="text-[rgba(240,237,230,0.55)]">
+                This will permanently delete your account and all your trips. This action cannot be undone.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel className="border-[rgba(255,255,255,0.08)] bg-transparent text-[#F0EDE6] hover:bg-[rgba(255,255,255,0.06)]">
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={deleteAccount}
                 disabled={deleting}
-                className="bg-[#E11D48] hover:bg-[#C01A3F] text-white"
+                className="bg-[#E05252] text-white hover:bg-[#E05252]/90"
               >
-                {deleting ? "Deleting…" : "Yes, delete everything"}
+                {deleting ? "Deleting…" : "Delete Account"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

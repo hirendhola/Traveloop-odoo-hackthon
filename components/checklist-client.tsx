@@ -16,12 +16,12 @@ type ChecklistItem = {
   createdAt: string;
 };
 
-const CATEGORIES: { value: Category; label: string; emoji: string }[] = [
-  { value: "clothing",    label: "Clothing",    emoji: "👕" },
-  { value: "documents",   label: "Documents",   emoji: "📄" },
-  { value: "electronics", label: "Electronics", emoji: "🔋" },
-  { value: "toiletries",  label: "Toiletries",  emoji: "🧴" },
-  { value: "other",       label: "Other",       emoji: "📦" },
+const CATEGORIES: { value: Category; label: string }[] = [
+  { value: "clothing",    label: "Clothing" },
+  { value: "documents",   label: "Documents" },
+  { value: "electronics", label: "Electronics" },
+  { value: "toiletries",  label: "Toiletries" },
+  { value: "other",       label: "Other" },
 ];
 
 export function ChecklistClient({
@@ -93,22 +93,22 @@ export function ChecklistClient({
     <div className="space-y-6">
       {/* Progress */}
       {total > 0 && (
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 px-5 py-4">
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-4">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm text-[#5A6B7A]">Packing progress</span>
-            <span className="font-semibold text-[#0D1B2A]">
+            <span className="text-sm text-[rgba(240,237,230,0.55)]">Packing progress</span>
+            <span className="font-medium text-[#F0EDE6]">
               {packed}/{total} packed
             </span>
           </div>
-          <div className="h-3 overflow-hidden rounded-full bg-[#EDE4CF]">
+          <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
             <div
-              className="h-3 rounded-full bg-[#7D9B76] transition-all duration-300"
+              className="h-1.5 rounded-full bg-[#E8C547] transition-all duration-300"
               style={{ width: `${pct}%` }}
             />
           </div>
           {pct === 100 && (
             <p className="mt-2 flex items-center gap-1.5 text-sm text-[#7D9B76]">
-              <Check size={15} /> All packed! Ready to go 🎉
+              <Check size={15} /> All packed! Ready to go
             </p>
           )}
         </div>
@@ -118,7 +118,7 @@ export function ChecklistClient({
       <div className="flex items-center justify-between">
         <Button
           onClick={() => setShowForm(!showForm)}
-          className="h-8 rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C]"
+          className="h-9 rounded-full bg-[#E8C547] px-4 text-sm font-semibold text-[#080C10] hover:bg-[#d4b33f]"
         >
           <Plus size={14} className="mr-1.5" />
           Add Item
@@ -128,7 +128,7 @@ export function ChecklistClient({
             variant="outline"
             onClick={resetAll}
             disabled={resetting}
-            className="h-8 rounded-full border-[#D4C9B0] px-3 text-xs text-[#5A6B7A] hover:bg-[#EDE4CF]"
+            className="h-9 rounded-full border-[rgba(255,255,255,0.08)] px-3 text-xs text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
           >
             <RotateCcw size={12} className="mr-1.5" />
             {resetting ? "Resetting…" : "Reset All"}
@@ -138,21 +138,21 @@ export function ChecklistClient({
 
       {/* Add form */}
       {showForm && (
-        <div className="rounded-xl border-2 border-[#FF5733]/20 bg-white/80 p-4 space-y-3">
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 space-y-1">
-              <Label className="text-xs text-[#5A6B7A]">Item name</Label>
+              <Label className="text-xs text-[rgba(240,237,230,0.45)]">Item name</Label>
               <Input
                 value={newLabel}
                 onChange={(e) => setNewLabel(e.target.value)}
                 placeholder="e.g. Passport, Sunscreen…"
-                className="border-[#D4C9B0]"
+                className="border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus:border-[#E8C547]"
                 onKeyDown={(e) => e.key === "Enter" && addItem()}
                 autoFocus
               />
             </div>
             <div className="col-span-2 space-y-1">
-              <Label className="text-xs text-[#5A6B7A]">Category</Label>
+              <Label className="text-xs text-[rgba(240,237,230,0.45)]">Category</Label>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((cat) => (
                   <button
@@ -161,11 +161,11 @@ export function ChecklistClient({
                     onClick={() => setNewCategory(cat.value)}
                     className={`rounded-full border px-3 py-1 text-xs transition-colors ${
                       newCategory === cat.value
-                        ? "border-[#FF5733] bg-[#FF5733] text-white"
-                        : "border-[#D4C9B0] text-[#5A6B7A] hover:border-[#FF5733]"
+                        ? "border-[#E8C547] bg-[rgba(232,197,71,0.12)] text-[#E8C547]"
+                        : "border-[rgba(255,255,255,0.08)] text-[rgba(240,237,230,0.45)] hover:border-[#E8C547] hover:text-[#E8C547]"
                     }`}
                   >
-                    {cat.emoji} {cat.label}
+                    {cat.label}
                   </button>
                 ))}
               </div>
@@ -175,14 +175,14 @@ export function ChecklistClient({
             <Button
               onClick={addItem}
               disabled={adding || !newLabel.trim()}
-              className="rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-50"
+              className="h-8 rounded-full bg-[#E8C547] px-4 text-xs font-semibold text-[#080C10] hover:bg-[#d4b33f] disabled:opacity-50"
             >
               {adding ? "Adding…" : "Add"}
             </Button>
             <Button
               variant="outline"
               onClick={() => { setShowForm(false); setNewLabel(""); }}
-              className="rounded-full border-[#D4C9B0] px-4 text-sm"
+              className="h-8 rounded-full border-[rgba(255,255,255,0.08)] bg-transparent text-xs text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
             >
               Cancel
             </Button>
@@ -192,57 +192,49 @@ export function ChecklistClient({
 
       {/* Items by category */}
       {items.length === 0 ? (
-        <div className="rounded-xl border-2 border-dashed border-[#D4C9B0] bg-[#F5ECD7] py-14 text-center">
-          <p className="text-2xl mb-2">🎒</p>
-          <p className="font-medium text-[#0D1B2A]">Nothing packed yet</p>
-          <p className="mt-1 text-sm text-[#5A6B7A]">Add items to your packing list</p>
+        <div className="flex flex-col items-center rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] py-14 text-center">
+          <p className="text-2xl mb-2 text-[rgba(240,237,230,0.2)]">🎒</p>
+          <p className="font-medium text-[#F0EDE6]">Nothing packed yet</p>
+          <p className="mt-1 text-sm text-[rgba(240,237,230,0.45)]">Add items to your packing list</p>
         </div>
       ) : (
         <div className="space-y-4">
           {grouped.map((group) => {
             const groupPacked = group.items.filter((i) => i.isPacked).length;
             return (
-              <div key={group.value} className="rounded-xl border border-[#D4C9B0] bg-white/80 overflow-hidden">
-                <div className="flex items-center justify-between bg-[#F8F4EC] px-4 py-2.5 border-b border-[#D4C9B0]">
-                  <span className="flex items-center gap-2 text-sm font-semibold text-[#0D1B2A]">
-                    <span>{group.emoji}</span>
+              <div key={group.value} className="rounded-xl border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] overflow-hidden">
+                <div className="flex items-center justify-between bg-[rgba(255,255,255,0.03)] px-4 py-2.5 border-b border-[rgba(255,255,255,0.06)]">
+                  <span className="text-sm font-medium text-[#F0EDE6]">
                     {group.label}
                   </span>
-                  <span className="text-xs text-[#A0AEBF]">
+                  <span className="text-xs text-[rgba(240,237,230,0.35)]">
                     {groupPacked}/{group.items.length}
                   </span>
                 </div>
-                <div className="divide-y divide-[#F0E8D9]">
+                <div className="divide-y divide-[rgba(255,255,255,0.04)]">
                   {group.items.map((item) => (
                     <div
                       key={item.id}
-                      className={`flex items-center gap-3 px-4 py-3 transition-colors ${
-                        item.isPacked ? "bg-[#7D9B76]/5" : ""
-                      }`}
+                      className="flex items-center gap-3 px-4 py-3"
                     >
                       <button
-                        type="button"
                         onClick={() => togglePacked(item)}
-                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-all ${
+                        className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border transition-colors ${
                           item.isPacked
-                            ? "border-[#7D9B76] bg-[#7D9B76] text-white"
-                            : "border-[#D4C9B0] hover:border-[#7D9B76]"
+                            ? "border-[#E8C547] bg-[#E8C547] text-[#080C10]"
+                            : "border-[rgba(255,255,255,0.15)] bg-transparent hover:border-[#E8C547]"
                         }`}
                       >
-                        {item.isPacked && <Check size={11} />}
+                        {item.isPacked && <Check size={12} />}
                       </button>
-                      <span
-                        className={`flex-1 text-sm transition-all ${
-                          item.isPacked ? "text-[#A0AEBF] line-through" : "text-[#0D1B2A]"
-                        }`}
-                      >
+                      <span className={`flex-1 text-sm ${item.isPacked ? "text-[rgba(240,237,230,0.35)] line-through" : "text-[#F0EDE6]"}`}>
                         {item.label}
                       </span>
                       <button
-                        type="button"
                         onClick={() => deleteItem(item.id)}
                         disabled={deletingId === item.id}
-                        className="shrink-0 text-[#D4C9B0] hover:text-[#E11D48] disabled:opacity-40 transition-colors"
+                        className="shrink-0 text-[rgba(240,237,230,0.2)] transition-colors hover:text-[#E05252] disabled:opacity-40"
+                        title="Delete"
                       >
                         <Trash2 size={14} />
                       </button>

@@ -67,4 +67,15 @@ export const auth = betterAuth({
   socialProviders: {},
   secret: process.env.BETTER_AUTH_SECRET,
   baseURL: process.env.BETTER_AUTH_URL,
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          await db.userProfile.create({
+            data: { userId: user.id },
+          });
+        },
+      },
+    },
+  },
 });

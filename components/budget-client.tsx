@@ -4,6 +4,13 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus, Trash2, TrendingUp, TrendingDown, DollarSign, AlertTriangle } from "lucide-react";
 
 type Expense = {
@@ -17,17 +24,13 @@ type Expense = {
 
 type Category = "transport" | "stay" | "activity" | "meals" | "other";
 
-const CATEGORIES: { value: Category; label: string; color: string; bg: string }[] = [
-  { value: "transport", label: "Transport", color: "text-blue-700", bg: "bg-blue-50 border-blue-200" },
-  { value: "stay",      label: "Stay",      color: "text-purple-700", bg: "bg-purple-50 border-purple-200" },
-  { value: "activity",  label: "Activity",  color: "text-green-700", bg: "bg-green-50 border-green-200" },
-  { value: "meals",     label: "Meals",     color: "text-orange-700", bg: "bg-orange-50 border-orange-200" },
-  { value: "other",     label: "Other",     color: "text-gray-600",  bg: "bg-gray-50 border-gray-200" },
+const CATEGORIES: { value: Category; label: string; color: string }[] = [
+  { value: "transport", label: "Transport", color: "#85C1E2" },
+  { value: "stay",      label: "Stay",      color: "#C4A882" },
+  { value: "activity",  label: "Activity",  color: "#7D9B76" },
+  { value: "meals",     label: "Meals",     color: "#E8C547" },
+  { value: "other",     label: "Other",     color: "rgba(240,237,230,0.4)" },
 ];
-
-const CAT_ICONS: Record<string, string> = {
-  transport: "✈️", stay: "🏨", activity: "🎯", meals: "🍽", other: "📦",
-};
 
 export function BudgetClient({
   tripId, totalBudget: initialBudget, expenses: initialExpenses, totalDays,
@@ -87,87 +90,94 @@ export function BudgetClient({
     <div className="space-y-6">
       {/* Over-budget alert */}
       {overBudget && (
-        <div className="flex items-start gap-3 rounded-xl border border-[#E11D48]/30 bg-[#E11D48]/10 px-4 py-3">
-          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-[#E11D48]" />
+        <div className="flex items-start gap-3 rounded-xl border border-[#E05252]/20 bg-[#E05252]/10 px-4 py-3">
+          <AlertTriangle size={18} className="mt-0.5 shrink-0 text-[#E05252]" />
           <div>
-            <p className="text-sm font-semibold text-[#E11D48]">Over budget!</p>
-            <p className="text-xs text-[#5A6B7A]">
+            <p className="text-sm font-medium text-[#E05252]">Over budget!</p>
+            <p className="text-xs text-[rgba(240,237,230,0.45)]">
               You've exceeded your budget by ${Math.abs(remaining!).toLocaleString()}.
-              Consider reviewing your expenses.
             </p>
           </div>
         </div>
       )}
 
-      {/* Summary cards */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 p-4">
-          <p className="text-xs text-[#A0AEBF]">Total Budget</p>
-          <p className="mt-1 text-xl font-bold text-[#0D1B2A]">
-            {initialBudget ? `$${initialBudget.toLocaleString()}` : "—"}
-          </p>
-        </div>
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 p-4">
-          <p className="text-xs text-[#A0AEBF]">Spent</p>
-          <p className={`mt-1 text-xl font-bold ${overBudget ? "text-[#E11D48]" : "text-[#0D1B2A]"}`}>
-            ${totalSpent.toLocaleString()}
-          </p>
-        </div>
-        {remaining !== null && (
-          <div className={`rounded-xl border p-4 sm:col-span-1 col-span-2 ${overBudget ? "border-[#E11D48]/30 bg-[#E11D48]/5" : "border-[#7D9B76]/30 bg-[#7D9B76]/5"}`}>
-            <p className="text-xs text-[#A0AEBF]">{overBudget ? "Over Budget" : "Remaining"}</p>
-            <p className={`mt-1 text-xl font-bold flex items-center gap-1 ${overBudget ? "text-[#E11D48]" : "text-[#7D9B76]"}`}>
-              {overBudget ? <TrendingDown size={18} /> : <TrendingUp size={18} />}
-              ${Math.abs(remaining).toLocaleString()}
-            </p>
-          </div>
-        )}
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 p-4 col-span-2 sm:col-span-1">
-          <p className="text-xs text-[#A0AEBF]">Avg / Day</p>
-          <p className="mt-1 text-xl font-bold text-[#0D1B2A]">${avgPerDay.toFixed(0)}</p>
-          {budgetPerDay && (
-            <p className={`text-xs mt-0.5 ${avgPerDay > budgetPerDay ? "text-[#E11D48]" : "text-[#7D9B76]"}`}>
-              Budget: ${budgetPerDay.toFixed(0)}/day
-            </p>
-          )}
-        </div>
+      {/* Large total cost */}
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-[rgba(240,237,230,0.35)]">Total Spent</p>
+        <p className="font-(family-name:--font-dm-mono) text-[3rem] font-medium text-[#E8C547]">
+          ${totalSpent.toLocaleString()}
+        </p>
       </div>
 
-      {/* Budget progress bar */}
+      {/* Budget bar */}
       {initialBudget && (
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 px-5 py-4">
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] px-5 py-4">
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="text-[#5A6B7A]">Budget used</span>
-            <span className={`font-semibold ${overBudget ? "text-[#E11D48]" : "text-[#0D1B2A]"}`}>
+            <span className="text-[rgba(240,237,230,0.55)]">Budget used</span>
+            <span className={`font-medium ${overBudget ? "text-[#E05252]" : "text-[#E8C547]"}`}>
               {pct.toFixed(1)}%
             </span>
           </div>
-          <div className="h-3 overflow-hidden rounded-full bg-[#EDE4CF]">
+          <div className="h-1.5 overflow-hidden rounded-full bg-[rgba(255,255,255,0.08)]">
             <div
-              className={`h-3 rounded-full transition-all duration-500 ${overBudget ? "bg-[#E11D48]" : "bg-[#7D9B76]"}`}
+              className={`h-1.5 rounded-full transition-all duration-500 ${overBudget ? "bg-[#E05252]" : "bg-[#E8C547]"}`}
               style={{ width: `${pct}%` }}
             />
           </div>
         </div>
       )}
 
+      {/* Summary cards */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-4">
+          <p className="text-[10px] uppercase tracking-wider text-[rgba(240,237,230,0.35)]">Total Budget</p>
+          <p className="mt-1 font-(family-name:--font-dm-mono) text-xl text-[#F0EDE6]">
+            {initialBudget ? `$${initialBudget.toLocaleString()}` : "—"}
+          </p>
+        </div>
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-4">
+          <p className="text-[10px] uppercase tracking-wider text-[rgba(240,237,230,0.35)]">Spent</p>
+          <p className={`mt-1 font-(family-name:--font-dm-mono) text-xl ${overBudget ? "text-[#E05252]" : "text-[#F0EDE6]"}`}>
+            ${totalSpent.toLocaleString()}
+          </p>
+        </div>
+        {remaining !== null && (
+          <div className={`rounded-xl border p-4 ${overBudget ? "border-[#E05252]/20 bg-[#E05252]/5" : "border-[#7D9B76]/20 bg-[#7D9B76]/5"}`}>
+            <p className="text-[10px] uppercase tracking-wider text-[rgba(240,237,230,0.35)]">{overBudget ? "Over Budget" : "Remaining"}</p>
+            <p className={`mt-1 font-(family-name:--font-dm-mono) text-xl flex items-center gap-1 ${overBudget ? "text-[#E05252]" : "text-[#7D9B76]"}`}>
+              {overBudget ? <TrendingDown size={18} /> : <TrendingUp size={18} />}
+              ${Math.abs(remaining).toLocaleString()}
+            </p>
+          </div>
+        )}
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-4">
+          <p className="text-[10px] uppercase tracking-wider text-[rgba(240,237,230,0.35)]">Avg / Day</p>
+          <p className="mt-1 font-(family-name:--font-dm-mono) text-xl text-[#F0EDE6]">${avgPerDay.toFixed(0)}</p>
+          {budgetPerDay && (
+            <p className={`text-xs mt-0.5 ${avgPerDay > budgetPerDay ? "text-[#E05252]" : "text-[#7D9B76]"}`}>
+              Budget: ${budgetPerDay.toFixed(0)}/day
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Category breakdown */}
       {byCategory.length > 0 && (
-        <div className="rounded-xl border border-[#D4C9B0] bg-white/80 p-5">
-          <h3 className="mb-3 text-sm font-semibold text-[#0D1B2A]">Spending by Category</h3>
+        <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-5">
+          <h3 className="mb-4 text-sm font-medium text-[#F0EDE6]">Spending by Category</h3>
           <div className="space-y-3">
             {byCategory.map((cat) => (
               <div key={cat.value} className="flex items-center gap-3">
-                <span className="text-lg w-6">{CAT_ICONS[cat.value]}</span>
+                <div className="h-3 w-3 shrink-0 rounded-full" style={{ backgroundColor: cat.color }} />
                 <div className="flex-1">
                   <div className="mb-1 flex items-center justify-between">
-                    <span className="text-xs font-medium text-[#0D1B2A]">{cat.label}</span>
-                    <span className="text-xs text-[#5A6B7A]">${cat.total.toLocaleString()}</span>
+                    <span className="text-xs font-medium text-[#F0EDE6]">{cat.label}</span>
+                    <span className="text-xs text-[rgba(240,237,230,0.4)]">${cat.total.toLocaleString()}</span>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-[#EDE4CF]">
+                  <div className="h-1 overflow-hidden rounded-full bg-[rgba(255,255,255,0.06)]">
                     <div
-                      className="h-1.5 rounded-full bg-[#FF5733]"
-                      style={{ width: `${totalSpent > 0 ? (cat.total / totalSpent) * 100 : 0}%` }}
+                      className="h-1 rounded-full"
+                      style={{ width: `${totalSpent > 0 ? (cat.total / totalSpent) * 100 : 0}%`, backgroundColor: cat.color }}
                     />
                   </div>
                 </div>
@@ -178,12 +188,12 @@ export function BudgetClient({
       )}
 
       {/* Add expense */}
-      <div className="rounded-xl border border-[#D4C9B0] bg-white/80 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-[#0D1B2A]">Expenses</h3>
+      <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] p-5">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-sm font-medium text-[#F0EDE6]">Expenses</h3>
           <Button
             onClick={() => setShowForm(!showForm)}
-            className="h-8 rounded-full bg-[#FF5733] px-3 text-xs text-[#0D1B2A] hover:bg-[#FF8A6C]"
+            className="h-8 rounded-full bg-[#E8C547] px-3 text-xs font-semibold text-[#080C10] hover:bg-[#d4b33f]"
           >
             <Plus size={13} className="mr-1" />
             Add Expense
@@ -191,53 +201,57 @@ export function BudgetClient({
         </div>
 
         {showForm && (
-          <div className="mb-4 space-y-3 rounded-xl border-2 border-[#FF5733]/20 bg-[#F8F4EC] p-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="col-span-2 space-y-1">
-                <Label className="text-xs text-[#5A6B7A]">Label</Label>
+          <div className="mb-4 space-y-3 rounded-lg border border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.03)] p-4">
+            <div className="grid gap-3 sm:grid-cols-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs text-[rgba(240,237,230,0.45)]">Label</Label>
                 <Input
                   value={newLabel}
                   onChange={(e) => setNewLabel(e.target.value)}
-                  placeholder="e.g. Train Tokyo → Kyoto"
-                  className="border-[#D4C9B0] bg-white"
-                  onKeyDown={(e) => e.key === "Enter" && addExpense()}
+                  placeholder="e.g. Hotel booking"
+                  className="h-9 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus:border-[#E8C547]"
                 />
               </div>
-              <div className="space-y-1">
-                <Label className="text-xs text-[#5A6B7A]">Amount ($)</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-[rgba(240,237,230,0.45)]">Amount</Label>
                 <Input
-                  type="number" min="0" step="0.01"
+                  type="number"
+                  min="0"
+                  step="0.01"
                   value={newAmount}
                   onChange={(e) => setNewAmount(e.target.value)}
                   placeholder="0.00"
-                  className="border-[#D4C9B0] bg-white"
+                  className="h-9 border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-[#F0EDE6] placeholder:text-[rgba(240,237,230,0.25)] focus:border-[#E8C547]"
                 />
               </div>
-              <div className="space-y-1">
-                <Label className="text-xs text-[#5A6B7A]">Category</Label>
-                <select
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value as Category)}
-                  className="h-10 w-full rounded-lg border border-[#D4C9B0] bg-white px-3 text-sm text-[#0D1B2A] focus:outline-none focus:ring-1 focus:ring-[#FF5733]"
-                >
-                  {CATEGORIES.map((c) => (
-                    <option key={c.value} value={c.value}>{c.label}</option>
-                  ))}
-                </select>
+              <div className="space-y-1.5">
+                <Label className="text-xs text-[rgba(240,237,230,0.45)]">Category</Label>
+                <Select value={newCategory} onValueChange={(v) => setNewCategory(v as Category)}>
+                  <SelectTrigger className="h-9 w-full rounded-md border-[rgba(255,255,255,0.08)] bg-[rgba(255,255,255,0.04)] text-sm text-[#F0EDE6] focus:ring-[#E8C547]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border-[rgba(255,255,255,0.12)] bg-[#1B2333]">
+                    {CATEGORIES.map((c) => (
+                      <SelectItem key={c.value} value={c.value} className="text-[#F0EDE6] focus:bg-[rgba(255,255,255,0.08)] focus:text-[#F0EDE6]">
+                        {c.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div className="flex gap-2">
               <Button
                 onClick={addExpense}
                 disabled={adding || !newLabel.trim() || !newAmount}
-                className="rounded-full bg-[#FF5733] px-4 text-sm text-[#0D1B2A] hover:bg-[#FF8A6C] disabled:opacity-50"
+                className="h-8 rounded-full bg-[#E8C547] px-4 text-xs font-semibold text-[#080C10] hover:bg-[#d4b33f] disabled:opacity-60"
               >
                 {adding ? "Adding…" : "Add"}
               </Button>
               <Button
                 variant="outline"
                 onClick={() => { setShowForm(false); setNewLabel(""); setNewAmount(""); }}
-                className="rounded-full border-[#D4C9B0] px-4 text-sm"
+                className="h-8 border-[rgba(255,255,255,0.08)] bg-transparent text-xs text-[rgba(240,237,230,0.55)] hover:bg-[rgba(255,255,255,0.06)]"
               >
                 Cancel
               </Button>
@@ -245,38 +259,37 @@ export function BudgetClient({
           </div>
         )}
 
-        {expenses.length === 0 ? (
-          <p className="py-6 text-center text-sm text-[#A0AEBF]">No expenses recorded yet</p>
-        ) : (
-          <div className="divide-y divide-[#F0E8D9]">
-            {expenses.map((e) => {
-              const cat = CATEGORIES.find((c) => c.value === e.category);
-              return (
-                <div key={e.id} className="flex items-center gap-3 py-3">
-                  <span className="text-lg">{CAT_ICONS[e.category] ?? "📦"}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="truncate text-sm font-medium text-[#0D1B2A]">{e.label}</p>
-                    <span className={`inline-block rounded-full border px-2 py-0.5 text-xs ${cat?.bg ?? ""} ${cat?.color ?? ""}`}>
-                      {cat?.label ?? e.category}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-sm font-semibold text-[#0D1B2A]">
-                      ${e.amount.toLocaleString()}
-                    </span>
-                    <button
-                      onClick={() => deleteExpense(e.id)}
-                      disabled={deletingId === e.id}
-                      className="text-[#A0AEBF] hover:text-[#E11D48] disabled:opacity-40"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
+        <div className="space-y-2">
+          {expenses.map((expense) => {
+            const cat = CATEGORIES.find((c) => c.value === expense.category);
+            return (
+              <div
+                key={expense.id}
+                className="flex items-center gap-3 rounded-lg border border-[rgba(255,255,255,0.04)] bg-[rgba(255,255,255,0.02)] px-4 py-3"
+              >
+                <div className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: cat?.color ?? "rgba(240,237,230,0.3)" }} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm text-[#F0EDE6] truncate">{expense.label}</p>
+                  <p className="text-[10px] text-[rgba(240,237,230,0.35)] capitalize">{expense.category}</p>
                 </div>
-              );
-            })}
-          </div>
-        )}
+                <span className="shrink-0 font-(family-name:--font-dm-mono) text-sm text-[#E8C547]">
+                  ${expense.amount.toLocaleString()}
+                </span>
+                <button
+                  onClick={() => deleteExpense(expense.id)}
+                  disabled={deletingId === expense.id}
+                  className="shrink-0 text-[rgba(240,237,230,0.25)] transition-colors hover:text-[#E05252] disabled:opacity-50"
+                  title="Delete expense"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            );
+          })}
+          {expenses.length === 0 && (
+            <p className="py-6 text-center text-sm text-[rgba(240,237,230,0.35)]">No expenses yet</p>
+          )}
+        </div>
       </div>
     </div>
   );

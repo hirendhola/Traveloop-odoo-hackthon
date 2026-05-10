@@ -4,6 +4,10 @@ import { db } from "@/lib/prisma";
 import { headers } from "next/headers";
 import { NotesClient } from "@/components/notes-client";
 
+export const metadata = {
+  title: "Notes",
+};
+
 export default async function NotesPage({
   params,
 }: {

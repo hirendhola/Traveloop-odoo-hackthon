@@ -17,7 +17,7 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#F5ECD7]">
+    <div className="min-h-screen bg-[#080C10]">
       <AppSidebar userName={session.user.name ?? session.user.email} />
       {/* Main content area — offset by sidebar width on desktop */}
       <main className="pt-14 md:ml-16 md:pt-0">

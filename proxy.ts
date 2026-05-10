@@ -4,15 +4,27 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Public routes — no auth needed
+  // Fully public routes — never intercepted
   if (
     pathname.startsWith("/shared/") ||
+    pathname.startsWith("/api/auth")
+  ) {
+    return NextResponse.next();
+  }
+
+  // Guest-only pages (login, signup, etc.)
+  // If the user already has a session cookie, send them to the dashboard
+  // so they can't re-visit the login/signup screens while signed in.
+  if (
     pathname.startsWith("/login") ||
     pathname.startsWith("/signup") ||
     pathname.startsWith("/reset-password") ||
-    pathname.startsWith("/verify-email") ||
-    pathname.startsWith("/api/auth")
+    pathname.startsWith("/verify-email")
   ) {
+    const cookie = getSessionCookie(request);
+    if (cookie) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
     return NextResponse.next();
   }
 
@@ -50,3 +62,7 @@ export async function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon\\.ico).*)" ],
+};
